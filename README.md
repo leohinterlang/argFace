@@ -3,20 +3,21 @@ ArgFace
 ===
 Have you ever seen this kind of message from a computer program?
 
-    Usage: program [-a|--all] [-o|--output <name>] <file>...
+    Usage:
+        program [-a|--all] [-o|--output <name>] <file>...
     Options:
-    -a, --all           Include all files
-    -o, --output <name> Output file name
+        -a, --all           Include all files
+        -o, --output <name> Output file name
 
 Of course!
 It's the "usage" text that is printed when you ask for `--help`.
-Most people *do* find this message helpful.
-But if people can understand this, why not use this syntax for the computer as well?
+Most people *do* find that this message is helpful.
+If people can understand this, why not use this syntax for programs as well?
 Why not design a command line interface that understands this specification?
 
 That's exactly what **ArgFace** does.
 It creates the command line interface from a program's "usage" text.
-Then it parses the command line to yield values for the corresponding options and arguments.
+Then it parses the command line to yield values for corresponding options and arguments.
 
 Other command line interfaces (CLI) require a long sequence of procedural code
 just to get the options and arguments to make sense.
@@ -56,6 +57,9 @@ This example creates an ArgFace object using the ArgPrototype model.
 Then the command line arguments are parsed.
 Finally, the boolean class member variable `allOption` is tested
 to determine if `-a or -all` was specified as an option.
+
+The ArgPrototype model uses reflection to access even private variables.
+This is useful in the early stages of development for a program.
 
 ArgFace uses various operational models that determine the way that information
 is exchanged between the interface and the program.
