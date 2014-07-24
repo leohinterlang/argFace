@@ -53,7 +53,8 @@ to navigate through the program.
 The ArgPrototype model uses reflection to access even private member variables.
 Another model provides standard access through public getter and setter methods.
 There is also a procedural model that uses no reflection at all.
-Ref: [Different Models](#Different Models)
+Ref: [Different Models](#DifferentModels)
+Other: [Models](#Models)
 
 The example shows private member variables that represent the command line options
 and arguments that use names determined from the usage text.
@@ -64,7 +65,8 @@ These include:
 * **ArgPrototype** - Uses private access reflection.
 * **ArgStandard** - Uses reflection with public getter and setter methods.
 * **ArgProcedure** - Uses method calls with no reflection.
-
+<a name="DifferentModels"></a>
+<a id="Models"></a>
 ### Different Models
 ArgFace uses various operational models that determine the way that information is passed
 between the interface and the program. These include:
