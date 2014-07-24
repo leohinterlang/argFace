@@ -6,9 +6,9 @@ Have you ever seen this kind of message from a computer program?
     Usage:
         program [-a] [-b|--brand] [-c <name>] [find <pattern>] <file>...
     Options:
-        -a                 Process all files as a unit
-        -b, --brand		   Brand each line
-        -c          <name> Prefix name
+        -a                 Process all files as a unit.
+        -b, --brand		   Brand each line.
+        -c          <name> Prefix name.
 
 Of course!
 It's the "usage" text that is printed when you ask for `--help`.
@@ -34,7 +34,7 @@ Here's a brief example:
     	
 		public static void main (String [] args) {
       		Program prog = new Program();
-      		ArgFace argFace = ArgPrototype(usageText, prog);
+      		ArgFace argFace = ArgPrototype.create(usageText, prog);
       		if (argFace == null) {
       			System.exit(1);
       		}
@@ -42,7 +42,7 @@ Here's a brief example:
       		if (nArg < 0) {
       			System.exit(1);
       		}
-      		if (aOption) {
+      		if (prog.aOption) {
       			System.out.println("-a option specified");
 			...
 
@@ -69,8 +69,21 @@ Thus, an option "--dir-path" would use the variable declaration:
 
 Anything in the usage text that is not an option is an operand.
 Operands come in two flavors: literals and variables.
-The literal operand "find" is followed by a variable operand "<pattern>".
-The "<file>" specifier indicates a variable operand.
+The literal operand "find" is followed by a variable operand "&lt;pattern&gt;".
+The "&lt;file&gt;" specifier indicates a variable operand.
+
+All literal operands are declared as `boolean` variables.
+Variable operands are declared as `String` variables.
+Because the "&lt;file&gt;" operand is followed by the ellipsis "...", it is
+a repeating item and must be declared as an array or a list:
+
+	private String [] fileOperand;
+	private List<String> fileOperand;
+
+By default, option names end with the **option suffix** "Option" and operands end
+with the **operand suffix** "Operand".
+It is possible to change the `argOptionSuffix` and the `argOperandSuffix` as explained
+in the section [ArgFace operational variables](#argface-operational-variables).
 
 ### Different Models
 ArgFace uses various operational models that determine the way that information is passed
@@ -97,8 +110,42 @@ be used even when the program is run with a *SecurityManager*.
 by making method calls to the interface. Although these methods are available to all
 of the models, they are not always necessary.
 
+### Usage Text Format
+
 Other command line interfaces (CLI) require a long sequence of procedural code
 just to get the options and arguments to make sense.
 ArgFace does away with all that clutter.
-Rather than a load of initialization code, the usage text fully describes what is expected by the program.
+Rather than a load of initialization code, the usage text fully describes what is
+expected by the program.
+
+The overall format of the usage text is:
+
+    [usage[:]] program-name <usage-specification>
+        [program-name <usage-specification>] ...
+    [options[:]
+        <option-specification> ... ]
+
+The "usage" and colon are optional.
+The program name marks the start of each usage specifier.
+Multiple usage specifiers are mutually exclusive.
+
+The "options" section is used to define, clarify, or extend the program options. For example:
+
+    usage: prog [-a] define <variable-name> [<value>]
+    options:
+        -a, --allow Grant redefinition privilege.
+        
+Here the "-a" option specified in the usage section is paired with an
+alternate longer name "--allow" and assigned a help message.
+An equivalent specification would be:
+
+    usage: prog [-a|--allow] 'Grant redefinition privilege.'
+        define <variable-name> [<value>]
+
+### ArgFace Operational Variables
+
+* argOptionSuffix
+* argOperandSuffix
+* posixFormat
+
 
