@@ -4,62 +4,59 @@ ArgFace
 Have you ever seen this kind of message from a computer program?
 
     Usage:
-        program [-a|--all] [-o|--output <name>] <file>...
+        program [-a] [-b|--brand] [-c <name>] <file>...
     Options:
-        -a, --all           Include all files
-        -o, --output <name> Output file name
+        -a                 Process all files as a unit
+        -b, --brand		   Brand each line
+        -c          <name> Prefix name
 
 Of course!
 It's the "usage" text that is printed when you ask for `--help`.
 Most people *do* find that this message is helpful.
-If people can understand this, why not use this syntax for programs as well?
-Why not design a command line interface that understands this specification?
+So why not design a command line interface that understands this specification?
 
 That's exactly what **ArgFace** does.
 It creates the command line interface from a program's "usage" text.
 Then it parses the command line to yield values for corresponding options and arguments.
 
-Other command line interfaces (CLI) require a long sequence of procedural code
-just to get the options and arguments to make sense.
-ArgFace does away with all that clutter.
-Rather than a load of initialization code, the usage text fully describes what is expected by the program.
-
 Here's a brief example:
-
+```Java
     public class Program {
     	private final String usageText =
-    	  "Usage: Program [-a|--all] [-o|--output <name>] <file>...";
-    	private boolean allOption;
-    	private boolean outputOption;
-    	private String outputName;
-    	private String [] file;
+    	  "Usage: program [-a] [-b|--brand] [-c <name>] <file>...";
+    	private boolean aOption;
+    	private boolean bOption;
+    	private boolean cOption;
+    	private String  cName;
+    	private String [] fileOperand;
     	
 		public static void main (String [] args) {
       		Program prog = new Program();
-      		if (! prog.processArguments(args)) {
+      		ArgFace argFace = ArgPrototype(usageText, prog);
+      		if (argFace == null) {
       			System.exit(1);
+      		}
+      		int nArg = argFace.parse(args);
+      		if (nArg < 0) {
+      			System.exit(1);
+      		}
+      		if (aOption) {
+      			System.out.println("-a option specified");
 			...
-     
-     	private boolean processArguments(String [] args) {
-			ArgFace argFace = ArgPrototype.create(usageText, this);
-			if (argFace == null) {
-           		return false;
-			}
-			int nArg = argFace.parse(args);
-			if (nArg < 0) {
-				return false;
-			}
-      		if (allOption) {
-				System.out.println("Include all files");
-			...
+```
 
 This example creates an ArgFace object using the ArgPrototype model.
 Then the command line arguments are parsed.
-Finally, the boolean class member variable `allOption` is tested
-to determine if `-a or -all` was specified as an option.
+Finally, the boolean class member variable `aOption` is used
+to navigate through the program.
 
-The ArgPrototype model uses reflection to access even private variables.
-This is useful in the early stages of development for a program.
+The ArgPrototype model uses reflection to access even private member variables.
+Another model provides standard access through public getter and setter methods.
+There is also a procedural model that uses no reflection at all.
+Ref: [Different Models](#Different Models)
+
+The example shows private member variables that represent the command line options
+and arguments that use names determined from the usage text.
 
 ArgFace uses various operational models that determine the way that information
 is exchanged between the interface and the program.
@@ -92,4 +89,9 @@ be used even when the program is run with a *SecurityManager*.
 * ArgProcedure does not use any reflection. In this model, information is exchanged
 by making method calls to the interface. Although these methods are available to all
 of the models, they are not always necessary.
+
+Other command line interfaces (CLI) require a long sequence of procedural code
+just to get the options and arguments to make sense.
+ArgFace does away with all that clutter.
+Rather than a load of initialization code, the usage text fully describes what is expected by the program.
 
