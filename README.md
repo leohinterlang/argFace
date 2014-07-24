@@ -4,7 +4,7 @@ ArgFace
 Have you ever seen this kind of message from a computer program?
 
     Usage:
-        program [-a] [-b|--brand] [-c <name>] <file>...
+        program [-a] [-b|--brand] [-c <name>] [find <pattern>] <file>...
     Options:
         -a                 Process all files as a unit
         -b, --brand		   Brand each line
@@ -23,11 +23,13 @@ Here's a brief example:
 
     public class Program {
     	private final String usageText =
-    	  "Usage: program [-a] [-b|--brand] [-c <name>] <file>...";
+    	  "Usage: program [-a] [-b|--brand] [-c <name>] [find <pattern>] <file>...";
     	private boolean aOption;
     	private boolean bOption;
     	private boolean cOption;
     	private String  cName;
+    	private boolean findOperand;
+    	private String  patternOperand;
     	private String [] fileOperand;
     	
 		public static void main (String [] args) {
@@ -56,13 +58,19 @@ See: [Different Models](#different-models)
 
 The example shows private member variables that represent the command line options
 and arguments that use names determined from the usage text.
+The "-a" option requires a `boolean` variable with the name "aOption".
+If the option includes an alternative, as with the "-b|--brand" specification,
+the variable can use either part as "bOption" or "brandOption".
 
-ArgFace uses various operational models that determine the way that information
-is exchanged between the interface and the program.
-These include:
-* **ArgPrototype** - Uses private access reflection.
-* **ArgStandard** - Uses reflection with public getter and setter methods.
-* **ArgProcedure** - Uses method calls with no reflection.
+The naming convention uses lower camel case throughout.
+Thus, an option "--dir-path" would use the variable declaration:
+
+	private boolean dirPathOption;
+
+Anything in the usage text that is not an option is an operand.
+Operands come in two flavors: literals and variables.
+The literal operand "find" is followed by a variable operand "<pattern>".
+The "<file>" specifier indicates a variable operand.
 
 ### Different Models
 ArgFace uses various operational models that determine the way that information is passed
