@@ -20,7 +20,7 @@ It creates the command line interface from a program's "usage" text.
 Then it parses the command line to yield values for corresponding options and arguments.
 
 Here's a brief example:
-```Java
+
     public class Program {
     	private final String usageText =
     	  "Usage: program [-a] [-b|--brand] [-c <name>] <file>...";
@@ -43,18 +43,16 @@ Here's a brief example:
       		if (aOption) {
       			System.out.println("-a option specified");
 			...
-```
 
 This example creates an ArgFace object using the ArgPrototype model.
 Then the command line arguments are parsed.
 Finally, the boolean class member variable `aOption` is used
 to navigate through the program.
 
-The ArgPrototype model uses reflection to access even private member variables.
+The ArgPrototype model uses reflection to access private member variables.
 Another model provides standard access through public getter and setter methods.
 There is also a procedural model that uses no reflection at all.
 Ref: [Different Models](#DifferentModels)
-Other: [Models](#Models)
 
 The example shows private member variables that represent the command line options
 and arguments that use names determined from the usage text.
@@ -65,8 +63,9 @@ These include:
 * **ArgPrototype** - Uses private access reflection.
 * **ArgStandard** - Uses reflection with public getter and setter methods.
 * **ArgProcedure** - Uses method calls with no reflection.
+
 <a name="DifferentModels"></a>
-<a id="Models"></a>
+
 ### Different Models
 ArgFace uses various operational models that determine the way that information is passed
 between the interface and the program. These include:
