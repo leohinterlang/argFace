@@ -59,8 +59,9 @@ See: [Different Models](#different-models)
 The example shows private member variables that represent the command line options
 and arguments that use names determined from the usage text.
 The "-a" option requires a `boolean` variable with the name "aOption".
-If the option includes an alternative, as with the "-b|--brand" specification,
-the variable can use either part as "bOption" or "brandOption".
+If the option includes an alternative, as with the "-b/--brand" specification,
+the variable can be named either "bOption" or "brandOption".
+See: [Options](#options)
 
 The naming convention uses lower camel case throughout.
 Thus, an option "--dir-path" would use the variable declaration:
@@ -71,6 +72,7 @@ Anything in the usage text that is not an option is an operand.
 Operands come in two flavors: literals and variables.
 The literal operand "find" is followed by a variable operand "&lt;pattern&gt;".
 The "&lt;file&gt;" specifier indicates a variable operand.
+See: [Operands](#operands)
 
 All literal operands are declared as `boolean` variables.
 Variable operands are declared as `String` variables.
@@ -78,12 +80,21 @@ Because the "&lt;file&gt;" operand is followed by the ellipsis "...", it is
 a repeating item and must be declared as an array or a list:
 
 	private String [] fileOperand;
+	// --- or ---
 	private List<String> fileOperand;
 
 By default, option names end with the **option suffix** "Option" and operands end
 with the **operand suffix** "Operand".
-It is possible to change the `argOptionSuffix` and the `argOperandSuffix` as explained
-in the section [ArgFace operational variables](#argface-operational-variables).
+It is possible to change these defaults.
+See: [Operating Variables](#operating-variables)
+
+### Options
+
+ArgFace supports both short, one-letter options and the longer GNU style options.
+
+### Operands
+
+Anything on the command line that is not an option is an operand.
 
 ### Different Models
 
@@ -156,10 +167,28 @@ These items are separated by the vertical bar or pipe character.
 * Single quotes surrounding text following an option specification is
 used as the help text for an option. `[-a] 'Help text'`
 
-### ArgFace Operational Variables
+### Operating Variables
 
-* argOptionSuffix
-* argOperandSuffix
-* posixFormat
+The following `boolean` variables define variations in the operation of ArgFace.
+If they are not defined, standard behavior will occur.
+
+* **allowOverwrite** - allows option arguments specified more than once to overwrite
+a previous value. Standard behavior is to treat this situation as a user error. If
+this variable is defined as `false`, overwrites will not be allowed resulting in the
+persistence of the first argument value.
+* **suppressHelp** - suppress use of the help facilities. This results in no output
+when the `--help` `--version` or `--about` options are specified by the user. It is
+up to the program to detect the presence of these options and to supply an appropriate
+response.
+* **posixFormat** - enables the posix format operating mode.
+* **sortOptions** - enables the sorting of options in the help output.
+
+These `String` variables are used to override their default values.
+
+* **optionSuffix** - defines the option suffix used to construct variable names.
+The default value is "Option".
+* **operandSuffix** - defines the operand suffix used to construct variable names.
+The default value is "Operand".
+
 
 

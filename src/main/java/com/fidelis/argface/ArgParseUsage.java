@@ -20,7 +20,7 @@ public class ArgParseUsage {
     private static ArgParseUsage instance   = new ArgParseUsage();
 
     private TokenSource          source;
-    private final String         delimiters = " \t\n\'-+|[]<>()=:,";
+    private final String         delimiters = " \t\n\'-+|[]<>()=:,/";
     private String               programName;
     private int                  optionalDepth;
     private boolean              optionDefForm;
@@ -154,16 +154,16 @@ public class ArgParseUsage {
         // Get next token after program name.
         String token = source.next();
         
-        // Loop until program name again.
-        while (! token.equals(programName)) {
-            
-            // No more tokens.
-            if (token == null) {
-                break;
-            }
-            
+        // Loop until no more tokens.
+        while (token != null) {
+        	
             Debug.trace("Token: " + token);
             
+        	// Stop if program name signals another usage.
+        	if (token.equals(programName)) {
+        		break;
+        	}
+ 
             // Start of options section. Exit loop.
             if (token.equalsIgnoreCase("options")) {
                 break;
@@ -248,6 +248,9 @@ public class ArgParseUsage {
             // Get next token.
             token = source.next();
             
+        }
+        if (token == null) {
+        	return "done";
         }
         return token;
     }
@@ -429,8 +432,8 @@ public class ArgParseUsage {
             return optionArg(false);
         }
         
-        // But a comma indicates a second option name.
-        else if (token.equals(",")) {
+        // But a slash or comma indicates a second option name.
+        else if (token.equals("/") || token.equals(",")) {
             option.setSpec(3);
             return secondOptionName();
         }

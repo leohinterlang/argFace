@@ -1,6 +1,6 @@
 /**
  *+
- *  Option.java
+ *  ArgOption.java
  *	1.0.0	Mar 15, 2014  Leo Hinterlang
  *-
  */
@@ -581,7 +581,6 @@ public class ArgOption implements Comparable<ArgOption> {
                 (help == null ? " " : "H"));
     }
 
-    @Override
     public int compareTo (ArgOption other) {
         return name.compareTo(other.name);
     }

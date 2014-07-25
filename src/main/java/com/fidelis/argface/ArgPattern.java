@@ -6,7 +6,6 @@
  */
 package com.fidelis.argface;
 
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -129,7 +128,6 @@ public class ArgPattern {
                                   patternMax, argCount, patternSpec(pat),
                                   pat);
             trace("pattern", text);
-            read();
             if (patternWatch) {
                 if (patternMin <= argCount && argCount <= patternMax) {
                     System.out.println("Try pattern: " + patternSpec(pat));
@@ -140,7 +138,6 @@ public class ArgPattern {
                 if (patternWatch) {
                         System.out.println("Pattern match found");
                 }
-                read();
                 addTargetOperands(pat);
                 return true;
             } else if (failBase == null) {
@@ -149,18 +146,6 @@ public class ArgPattern {
         }
         help.addProblem(usageNode, "No matching operand pattern");
         return false;
-    }
-    
-    private void read () {
-        if (Debug.isTrace() == false) {
-            return;
-        }
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
     
     private String first (ArgNode start) {
@@ -335,7 +320,6 @@ public class ArgPattern {
                 trace("fail Base", failBase.brief());
                 if (failNode == null) {
                     trace("fail Node", "NULL");
-                    read();
                 } else {
                     trace("fail Node", failNode.brief());
                 }
@@ -360,7 +344,6 @@ public class ArgPattern {
                         continue;
                     }
                     trace("south is NULL", failNode.brief());
-                    read();
                     return null;
                 }
             }

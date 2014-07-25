@@ -151,7 +151,7 @@ public class ArgReflect {
     }
     
     /**
-     * Returns a {@code String} from a getter method yeilds a String array.
+     * Returns a {@code String} from a getter method yields a String array.
      * The Strings from the array are appended together with an optional
      * newline between each element.
      * 

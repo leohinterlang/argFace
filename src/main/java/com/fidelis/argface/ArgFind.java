@@ -191,10 +191,12 @@ public class ArgFind {
         String name = getName(option);
         String altName = getAltName(option);
         String fieldName = name + optionSuffix;
+        Debug.verbose("findOptionField: " + fieldName);
         field = reflect.findField(fieldName, boolean.class);
         if (field == null) {
             if (altName != null) {
                 fieldName = altName + optionSuffix;
+                Debug.verbose("findOptionField alt: " + fieldName);
                 field = reflect.findField(fieldName, boolean.class);
             }
         }

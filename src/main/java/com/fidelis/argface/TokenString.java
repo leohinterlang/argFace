@@ -73,14 +73,12 @@ public class TokenString implements TokenSource {
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#close()
      */
-    @Override
     public void close () {
     }
 
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#getToken()
      */
-    @Override
     public String getToken () {
         return token;
     }
@@ -88,7 +86,6 @@ public class TokenString implements TokenSource {
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#next()
      */
-    @Override
     public String next () {
         token = pop();
         if (token != null) {
@@ -119,7 +116,6 @@ public class TokenString implements TokenSource {
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#open()
      */
-    @Override
     public boolean open () {
         return true;
     }
@@ -127,7 +123,6 @@ public class TokenString implements TokenSource {
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#peek()
      */
-    @Override
     public String peek () {
         token = next();
         push();
@@ -137,7 +132,6 @@ public class TokenString implements TokenSource {
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#pop()
      */
-    @Override
     public String pop () {
         if (stack.size() > 0) {
             return stack.pop();
@@ -148,7 +142,6 @@ public class TokenString implements TokenSource {
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#push(java.lang.String)
      */
-    @Override
     public void push (String token) {
         stack.push(token);
     }
@@ -156,7 +149,6 @@ public class TokenString implements TokenSource {
     /* (non-Javadoc)
      * @see com.fidelis.fsm.TokenSource#push()
      */
-    @Override
     public void push () {
         stack.push(token);
         if (meta != null) {
