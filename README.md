@@ -23,7 +23,7 @@ Here's a brief example:
 
     public class Program {
     	private final String usageText =
-    	  "Usage: program [-a] [-b|--brand] [-c <name>] [find <pattern>] <file>...";
+    	  "Usage: program [-a] [-b/--brand] [-c <name>] [find <pattern>] <file>...";
     	private boolean aOption;
     	private boolean bOption;
     	private boolean cOption;
@@ -86,30 +86,27 @@ It is possible to change the `argOptionSuffix` and the `argOperandSuffix` as exp
 in the section [ArgFace operational variables](#argface-operational-variables).
 
 ### Different Models
-ArgFace uses various operational models that determine the way that information is passed
-between the interface and the program. These include:
-* **ArgPrototype** - Uses reflection to pass information.
-* **ArgStandard** - Uses public getter and setter methods to pass information.
-* **ArgProcedure** - Uses method calls to pass information.
+
+ArgFace includes various operational models that determine the way that information is passed between the interface and the program. These include:
+
+* **ArgPrototype** - uses reflection to access fields defined by the program.
+The interface does not require getter and setter methods for this model but will
+instead attempt to access even private fields of the program. Note, however, that
+private access will fail if there is a *SecurityManager* in place for the program.
+
+* **ArgStandard** - also uses reflection to access fields. But unlike *ArgPrototype*,
+it uses only public getter and setter methods to exchange information. This model may
+be used even when the program is run with a *SecurityManager*.
+
+* **ArgProcedure** - does not use any reflection. In this model, information is exchanged
+by making method calls to the interface. Although these methods are available to all
+of the models, they are not always necessary.
 
 The creation phase of ArgFace establishes which model will be used.
 This is performed with code of the form:
 
     ArgFace argFace = <Model>.create(usageText, object);
-
-* ArgPrototype uses reflection to access fields defined by the program.
-The interface does not require getter and setter methods for this model but will
-instead attempt to access even private fields of the program. Note, however, that
-private access will fail if there is a *SecurityManager* in place for the program.
-
-* ArgStandard also uses reflection to access fields. But unlike *ArgPrototype*, it
-uses only public getter and setter methods to exchange information. This model may
-be used even when the program is run with a *SecurityManager*.
-
-* ArgProcedure does not use any reflection. In this model, information is exchanged
-by making method calls to the interface. Although these methods are available to all
-of the models, they are not always necessary.
-
+    
 ### Usage Text Format
 
 Other command line interfaces (CLI) require a long sequence of procedural code
@@ -139,8 +136,25 @@ Here the "-a" option specified in the usage section is paired with an
 alternate longer name "--allow" and assigned a help message.
 An equivalent specification would be:
 
-    usage: prog [-a|--allow] 'Grant redefinition privilege.'
+    usage: prog [-a/--allow] 'Grant redefinition privilege.'
         define <variable-name> [<value>]
+
+These are the special character rules for a usage specification:
+
+* Single dash precedes a short, one-letter option name. `-a`
+* Double dash precedes a long, option name. If the name uses
+multiple words, the words should be joined by a single dash.
+`--word-option-name`
+* Square brackets denote optional material. `[ optional ]`
+* Angle brackets delimit a named entity. This may
+include option arguments and variable operands. The name inside the
+brackets is part of a corresponding member variable name in the program.
+`< variable >`
+* Items inside parenthesis indicate a mutually exclusive choice.
+These items are separated by the vertical bar or pipe character.
+`( one | two )`
+* Single quotes surrounding text following an option specification is
+used as the help text for an option. `[-a] 'Help text'`
 
 ### ArgFace Operational Variables
 
