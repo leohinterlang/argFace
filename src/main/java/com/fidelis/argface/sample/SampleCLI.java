@@ -16,17 +16,32 @@ import com.fidelis.argface.Debug;
  */
 public class SampleCLI {
 	private final String [] usageText = {
-			"Usage: sample [-a] [-b/--brand] [-c <name>] [find <pattern>] <file>...",
+			"Usage: sample [-a] [-b/--brand] [-c <name>] [-d/--dir <path>]",
+			  "[find <pattern>] <file>...",
 			"Options:",
-			"-a, --all Process all files as a unit.",
-			"-b Brand each line.",
-			"-c Define a name."
+			  "-a, --all Process all files as a unit.",
+			  "-b Brand each line.",
+			  "-c Define a name.",
+			  "-d Set directory base path."
+	};
+	private final String versionText = "Sample 1.0.0";
+	private final String [] aboutText = {
+			versionText,
+			"2014-07-26",
+			"Leo Hinterlang    leohinterlang@gmail.com",
+			"Fidelis Software Technologies, Butler, PA"
 	};
 			
 	private boolean		aOption;
 	private boolean		bOption;
 	private boolean		cOption;
 	private String		 cName;
+	private boolean     dirOption;
+	private String      dirPath;
+	
+	private boolean     helpOption;
+	private boolean     versionOption;
+	private boolean     aboutOption;
 
 	private boolean		findOperand;
 	private String		 patternOperand;
@@ -45,6 +60,69 @@ public class SampleCLI {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @return the usageText
+	 */
+	public String[] getUsageText () {
+		return usageText;
+	}
+
+	/**
+	 * @return the versionText
+	 */
+	public String getVersionText () {
+		return versionText;
+	}
+
+	/**
+	 * @return the aboutText
+	 */
+	public String[] getAboutText () {
+		return aboutText;
+	}
+
+	/**
+	 * @return the helpOption
+	 */
+	public boolean isHelpOption () {
+		return helpOption;
+	}
+
+	/**
+	 * @param helpOption the helpOption to set
+	 */
+	public void setHelpOption (boolean helpOption) {
+		this.helpOption = helpOption;
+	}
+
+	/**
+	 * @return the versionOption
+	 */
+	public boolean isVersionOption () {
+		return versionOption;
+	}
+
+	/**
+	 * @param versionOption the versionOption to set
+	 */
+	public void setVersionOption (boolean versionOption) {
+		this.versionOption = versionOption;
+	}
+
+	/**
+	 * @return the aboutOption
+	 */
+	public boolean isAboutOption () {
+		return aboutOption;
+	}
+
+	/**
+	 * @param aboutOption the aboutOption to set
+	 */
+	public void setAboutOption (boolean aboutOption) {
+		this.aboutOption = aboutOption;
 	}
 
 	/**
@@ -101,6 +179,34 @@ public class SampleCLI {
 	 */
 	public void setcName (String cName) {
 		this.cName = cName;
+	}
+
+	/**
+	 * @return the dirOption
+	 */
+	public boolean isDirOption () {
+		return dirOption;
+	}
+
+	/**
+	 * @param dirOption the dirOption to set
+	 */
+	public void setDirOption (boolean dirOption) {
+		this.dirOption = dirOption;
+	}
+
+	/**
+	 * @return the dirPath
+	 */
+	public String getDirPath () {
+		return dirPath;
+	}
+
+	/**
+	 * @param dirPath the dirPath to set
+	 */
+	public void setDirPath (String dirPath) {
+		this.dirPath = dirPath;
 	}
 
 	/**

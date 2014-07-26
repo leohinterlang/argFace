@@ -1,6 +1,13 @@
+[Different Models](#different-models)
+| [Options](#options)
+| [Operands](#operands)
+| [Help Facilities](#help-facilities)
+| [Command Line](#command-line-syntax)
+| [Usage Text](#usage-text-syntax)
+| [Operating Variables](#operating-variables)
 
 ArgFace
-===
+=======
 Have you ever seen this kind of message from a computer program?
 
     Usage:
@@ -88,14 +95,6 @@ with the **operand suffix** "Operand".
 It is possible to change these defaults.
 See: [Operating Variables](#operating-variables)
 
-### Options
-
-ArgFace supports both short, one-letter options and the longer GNU style options.
-
-### Operands
-
-Anything on the command line that is not an option is an operand.
-
 ### Different Models
 
 ArgFace includes various operational models that determine the way that information is passed between the interface and the program. These include:
@@ -118,7 +117,74 @@ This is performed with code of the form:
 
     ArgFace argFace = <Model>.create(usageText, object);
     
-### Usage Text Format
+### Options
+
+ArgFace supports both short, one-letter options and the longer GNU style options.
+Short options begin with a single dash (hyphen). Long options begin with two dashes.
+
+    -a    (short option)
+    --all (long option)
+
+Short options may be specified in a letter group.
+
+    -abc (same as) -a -b -c
+
+Each option may be defined with two variants. Usually there is a short option and a
+long option. But two long options is also permitted.
+
+    -a/--all          (two versions of the same option)
+    --all/--all-files (also valid)
+
+### Operands
+
+Anything on the command line that is not an option is an operand.
+
+### Help Facilities
+
+ArgFace includes a set of help facilities that respond to the following
+user input options:
+
+* **--help**
+Displays a help message and exits. This includes the usage text and options section.
+This can be followed by an optional "helpText" message that the program may
+include to supply some additional information.
+The short option "-h" will be assigned as an alternative to this option as long as
+it is not already in use elsewhere.
+
+* **--version**
+Shows the program version number information.
+This is supplied by the program as the "versionText".
+If the short option "-v" has not already been assigned elsewhere, it may be used
+as an alternative.
+
+* **--about**
+Displays an about message for the program.
+Another optional feature to supply information about the program.
+This might include the version number, a realease date, an email address,
+company name, etc.
+The program supplies this as the "aboutText".
+The short option "-a" may also be used for this option as long as it is not
+already in use elsewhere.
+
+These options are available as long as the proper "text" information is supplied
+by the program.
+They will appear in a separate usage specification of the help output.
+If the usage text contains any of these options, they will appear as specified by
+the program.
+
+A program may choose to handle these options in another way or not at all.
+This is made possible by setting the operating variable "suppressHelp" to true.
+Add the options in the usage text and define member variables in the usual manner.
+
+    private final String usageText = "program --help | --version";
+    private boolean helpOption;
+    private boolean versionOption;
+
+
+
+### Command Line Syntax
+
+### Usage Text Syntax
 
 Other command line interfaces (CLI) require a long sequence of procedural code
 just to get the options and arguments to make sense.
