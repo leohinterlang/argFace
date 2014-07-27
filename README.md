@@ -135,6 +135,38 @@ long option. But two long options may also be used.
      -a/--all          (two versions of the same option)
      --all/--all-files (also valid)
 
+Both upper and lower case letters may be used with any option.
+
+     -abcABC           (both upper and lower case in letter group)
+     -p/--Page         (long option in title case)
+     --DIR <PATH>      (all capitals)
+
+ArgFace expects short option member variable names to be constructed from the option
+letter followed by the option suffix (default is "Option").
+
+     -a => aOption
+     -A => AOption
+
+The getter and setter names for short options also use the option letter.
+
+     -a => setaOption, getaOption
+     -A => setAOption, getAOption
+
+Long options use camel case for member variable names. Capitalized option names
+remain capitalized.
+
+     --dir => dirOption
+     --base-dir => baseDirOption
+     --DIR => DIROption
+
+The getters and setters always capitalize the first letter of long options.
+This means that you must not mix both title case and lower case for the same name.
+
+     --dir => setDirOption, getDirOption
+     --base-dir => setBaseDirOption, getBaseDirOption
+     --Dir => setDirOption, getDirOption (title case same as --dir above)
+     --DIR => setDIROption, getDIROption
+
 Options may take an argument and that argument may be specified as optional.
 
      --base-dir <path>  (option with an argument)
@@ -142,7 +174,25 @@ Options may take an argument and that argument may be specified as optional.
 
 If an option has two versions and an argument, the argument applies to both names.
 
-     -dir/--base-dir <path> (the path applies to both versions)
+     --dir/--base-dir <path> (the path applies to both versions)
+
+The naming convention for option arguments is similar to what has already been mentioned.
+Member variable names are constructed by first using the option name followed by the
+argument name.
+
+     --dir <path> => dirPath (camel case capitalizes argument name)
+     --base-dir [path] => baseDirPath (capitalize words after dash separator)
+     --Dir <path> => DirPath (capitals are preserved)
+     --DIR [PATH] => DIRPATH
+
+For the getters and setters of option arguments, again the first letter of long option
+names are capitalized. Do not mix title case and lower case for option names with the
+same spelling.
+
+     --dir <path> => setDirPath, getDirPath
+     --base-dir [path] => setBaseDirPath, getBaseDirPath
+     --Dir <path> => setDirPath, getDirPath (title case same as --dir above)
+     --DIR [PATH] => setDIRPATH, getDIRPATH (capitals are preserved)
 
 In order to specify that an optional argument is included on the command line, and to differentiate the argument from other operands, an equal sign (=) or colon (:) is used
 to tie the option to the argument.
@@ -181,20 +231,20 @@ Anything on the command line that is not an option is an operand.
 ArgFace includes a set of help facilities that respond to the following
 user input options:
 
-* **--help**
+* **--help (-h)**
 Displays a help message and exits. This includes the usage text and options section.
 This can be followed by an optional "helpText" message that the program may
 include to supply some additional information.
 The short option "-h" will be assigned as an alternative to this option as long as
 it is not already in use elsewhere.
 
-* **--version**
+* **--version (-v)**
 Shows the program version number information.
 This is supplied by the program as the "versionText".
 If the short option "-v" has not already been assigned elsewhere, it may be used
 as an alternative.
 
-* **--about**
+* **--about (-a)**
 Displays an about message for the program.
 Another optional feature to supply information about the program.
 This might include the version number, a realease date, an email address,
