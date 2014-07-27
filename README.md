@@ -122,18 +122,55 @@ This is performed with code of the form:
 ArgFace supports both short, one-letter options and the longer GNU style options.
 Short options begin with a single dash (hyphen). Long options begin with two dashes.
 
-    -a    (short option)
-    --all (long option)
+     -a    (short option)
+     --all (long option)
 
 Short options may be specified in a letter group.
 
-    -abc (same as) -a -b -c
+     -abc (same as) -a -b -c
 
 Each option may be defined with two variants. Usually there is a short option and a
-long option. But two long options is also permitted.
+long option. But two long options may also be used.
 
-    -a/--all          (two versions of the same option)
-    --all/--all-files (also valid)
+     -a/--all          (two versions of the same option)
+     --all/--all-files (also valid)
+
+Options may take an argument and that argument may be specified as optional.
+
+     --base-dir <path>  (option with an argument)
+     --base-dir [path]  (option with optional argument)
+
+If an option has two versions and an argument, the argument applies to both names.
+
+     -dir/--base-dir <path> (the path applies to both versions)
+
+In order to specify that an optional argument is included on the command line, and to differentiate the argument from other operands, an equal sign (=) or colon (:) is used
+to tie the option to the argument.
+
+    prog [--dir/--base-dir [path]] <file>...  (usage text)
+    $ prog --dir /directory/path file1 file2  (/directory/path treated as first file)
+    $ prog --dir=/directory/path file1 file2  (optional argument indicated by equal sign)
+
+For short options with an optional argument, the equal sign or colon will work just as
+well. However, short options may also indicate an argument by entering it adjacent to the
+option letter with no intervening spaces.
+
+    prog [-d/--dir [path]] <file>...  (usage text)
+    $ prog -d/directory/path file1    (adjacent to option letter)
+    $ prog -d=/directory/path file1   (also valid)
+
+The equal sign or colon indicators may include intervening spaces as long as the proper
+order is maintained.
+
+    $ prog -d = /directory/path file1  (spaces are allowed)
+    $ prog -d =/directory/path file1   (at start of argument)
+    $ prog -d: /directory/path file1   (also valid)
+
+Lastly, options don't have to be optional. But this only makes sense in terms of
+multiple usage specifications with the option indicating which one applies.
+
+    Usage: prog -s [-a] <file>...
+           prog -t <path>
 
 ### Operands
 
@@ -183,6 +220,93 @@ Add the options in the usage text and define member variables in the usual manne
 
 
 ### Command Line Syntax
+
+This section discusses what the user can enter on the command line to run a
+program and how optional material is presented to specify the desired
+outcome. Here are some references that demonstrate several variations in how
+the command line syntax has developed.
+
+[The Open Group (POSIX) - Utility Argument Syntax](
+http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html)<br>
+[Program Argument Syntax Conventions](
+http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html)<br>
+[Standards for Command Line Interfaces](
+http://www.gnu.org/prep/standards/html_node/Command_002dLine-Interfaces.html)
+
+Because of the historical significance of a number of Unix utilities, the
+Posix standards are a serious concern for this effort. Therefore, option
+letters or short options are given primary support.
+
+The GNU form of long options is also available. The only conflict here is
+that a command line option may be specified with a single hyphen even for the
+long names and that this might be unintentionally mistaken for a group of
+letter options.
+
+    [-abcde] (letter options)
+    [--ace]  (long option)
+    
+    $ program -ace  (ambiguous)
+    $ program --ace (not ambiguous)
+    
+This implementation will detect this situation and treat a single dash long
+option as an error if there is a corresponding letter group of the same
+configuration.
+
+The Posix standard outlines the command line format as follows:
+ 
+    $ proram_name [options] [operands...]
+    
+This form requires that all options come before any non-option arguments. The
+alternative mixes options and operands in any order on the command line.
+
+    $ program_name [option | operand]...
+    
+This implementation provides support for both varieties. The usage text
+should make it clear when options are expected to precede the operands.
+
+To enforce the POSIX version of the command line format (options before operands),
+a program may define the operating variable "posixFormat" to be true.
+TODO: need a link to the posix sample code.
+
+As was already mentioned, options may be specified by the user on the command
+line with both a single dash or a double dash no matter whether the option is
+a short option or a long option. However, a short
+option letter group will only be recognized following a single dash.
+
+    $ program -a --option file.txt
+    $ program --a -option file.txt # is also valid
+    $ program -abc # short form letter group
+
+If an option takes an argument, then the argument should follow the option as
+the next token on the command line. For a short option, the argument may be
+placed adjacent to the option letter in the same token. For any option, the
+argument may follow the option with an intervening separation character. This
+implementation supports the use of both the "=" and ":" as the separation
+character.
+
+    $ program -x Argument file.txt
+    $ program -xArgument file.txt
+    $ program -x:Argument file.txt
+    $ program -option Argument file.txt
+    $ program -option=Argument file.txt
+    $ program -option: Argument file.txt
+    $ program -option : Argument file.txt
+
+If an option argument is optional, there are a couple of ways to indicate
+that the argument is actually being specified. First, for short options, you
+can place the argument adjacent to the letter option in the same token
+(-xArgument). Or you can use one of the separation characters "=" or ":"
+after the option letter (-x=Argument). Long options require the use of the
+separation character. In addition, when the separation character is used, it
+may be specified in the next token of the command line, even by itself and
+then followed by the argument.
+
+    $ program -rArgument file.txt
+    $ program -r=Argument file.txt
+    $ program -r = Argument file.txt
+    $ program -option = Argument file.txt
+    $ program -option =Argument file.txt
+    $ program -option: Argument file.txt
 
 ### Usage Text Syntax
 
