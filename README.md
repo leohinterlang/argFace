@@ -1,9 +1,9 @@
-[Different Models](#different-models)
+[Models](#different-models)
 | [Options](#options)
 | [Operands](#operands)
-| [Help Facilities](#help-facilities)
 | [Command Line](#command-line-syntax)
 | [Usage Text](#usage-text-syntax)
+| [Help Facilities](#help-facilities)
 | [Operating Variables](#operating-variables)
 
 ArgFace
@@ -61,7 +61,7 @@ to navigate through the program.
 The ArgPrototype model uses reflection to access private member variables.
 Another model provides standard access through public getter and setter methods.
 There is also a procedural model that uses no reflection at all.
-See: [Different Models](#different-models)
+See: [Models](#different-models)
 
 The example shows private member variables that represent the command line options
 and arguments that use names determined from the usage text.
@@ -128,6 +128,14 @@ Short options begin with a single dash (hyphen). Long options begin with two das
 Short options may be specified in a letter group.
 
      -abc (same as) -a -b -c
+     
+Long option names may use letters, digits, the dash (hyphen) or the underscore.
+
+    --long
+    --dashes-join-words
+    --underscores_are_ok
+    --lowerCamelCase
+    --UpperCamelCase
 
 Each option may be defined with two variants. Usually there is a short option and a
 long option. But two long options may also be used.
@@ -159,12 +167,19 @@ remain capitalized.
      --base-dir => baseDirOption
      --DIR => DIROption
 
+The underscore is a valid character for java identifiers but the dash is not.
+ArgFace removes dashes from variable names and capitalizes the letter that follows
+to produce camel case. The underscore is preserved.
+
+    --base-dir => baseDirOption
+    --base_dir => base_dirOption
+
 The getters and setters always capitalize the first letter of long options.
 This means that you must not mix both title case and lower case for the same name.
 
      --dir => setDirOption, getDirOption
-     --base-dir => setBaseDirOption, getBaseDirOption
      --Dir => setDirOption, getDirOption (title case same as --dir above)
+      --base-dir => setBaseDirOption, getBaseDirOption
      --DIR => setDIROption, getDIROption
 
 Options may take an argument and that argument may be specified as optional.
@@ -190,8 +205,8 @@ names are capitalized. Do not mix title case and lower case for option names wit
 same spelling.
 
      --dir <path> => setDirPath, getDirPath
-     --base-dir [path] => setBaseDirPath, getBaseDirPath
      --Dir <path> => setDirPath, getDirPath (title case same as --dir above)
+     --base-dir [path] => setBaseDirPath, getBaseDirPath
      --DIR [PATH] => setDIRPATH, getDIRPATH (capitals are preserved)
 
 In order to specify that an optional argument is included on the command line, and to differentiate the argument from other operands, an equal sign (=) or colon (:) is used
@@ -224,49 +239,51 @@ multiple usage specifications with the option indicating which one applies.
 
 ### Operands
 
-Anything on the command line that is not an option is an operand.
+Anything in the usage text that is not an option is an operand. Variable operands are
+surrounded by angle brackets. Literal operands are plain text.
 
-### Help Facilities
+    <file> (variable operand)
+    match  (literal operand)
 
-ArgFace includes a set of help facilities that respond to the following
-user input options:
+Just like options, the names of operands may use letters, digits, the dash (hyphen)
+or the underscore. Both upper case and lower case letters are permissible.
 
-* **--help (-h)**
-Displays a help message and exits. This includes the usage text and options section.
-This can be followed by an optional "helpText" message that the program may
-include to supply some additional information.
-The short option "-h" will be assigned as an alternative to this option as long as
-it is not already in use elsewhere.
+    <dashes-join-words>
+    underscores_are_ok
+    lowerCamelCase
+    UpperCamelCase
+    ALL-CAPS
 
-* **--version (-v)**
-Shows the program version number information.
-This is supplied by the program as the "versionText".
-If the short option "-v" has not already been assigned elsewhere, it may be used
-as an alternative.
+Operand variable names are constructed using the operand name from the usage text
+joined with the operand suffix (the default is "Operand").
 
-* **--about (-a)**
-Displays an about message for the program.
-Another optional feature to supply information about the program.
-This might include the version number, a realease date, an email address,
-company name, etc.
-The program supplies this as the "aboutText".
-The short option "-a" may also be used for this option as long as it is not
-already in use elsewhere.
+    <dashes-join-words> => dashesJoinWordsOperand
+    underscores_are_ok => underscores_are_okOperand
+    lowerCamelCase => lowerCamelCaseOperand
+    UpperCamelCase => UpperCamelCaseOperand
+    ALL-CAPS => ALLCAPSOperand
 
-These options are available as long as the proper "text" information is supplied
-by the program.
-They will appear in a separate usage specification of the help output.
-If the usage text contains any of these options, they will appear as specified by
-the program.
+Unlike options that may be placed in any order on the command line, operands are
+positional.
 
-A program may choose to handle these options in another way or not at all.
-This is made possible by setting the operating variable "suppressHelp" to true.
-Add the options in the usage text and define member variables in the usual manner.
+    prog <first> <second> <third>  (usage text)
+    $ prog one two three  (command line)
+    "one" => firstOperand
+    "two" => secondOperand
+    "three" => thirdOperand
 
-    private final String usageText = "program --help | --version";
-    private boolean helpOption;
-    private boolean versionOption;
+If one of the operands is optional, the number of entries on the command line
+determines what is assigned.
 
+    prog <first> <second> [<third>]  (usage text)
+    $ prog one two  (command line)
+    "one" => firstOperand
+    "two" => secondOperand
+    
+    prog [<first>] <second> <third>  (usage text) TODO: Problem with this.
+    $ prog two three  (command line)
+    "two" => secondOperand
+    "three" => thirdOperand
 
 
 ### Command Line Syntax
@@ -406,6 +423,47 @@ These items are separated by the vertical bar or pipe character.
 `( one | two )`
 * Single quotes surrounding text following an option specification is
 used as the help text for an option. `[-a] 'Help text'`
+
+### Help Facilities
+
+ArgFace includes a set of help facilities that respond to the following
+user input options:
+
+* **--help (-h)**
+Displays a help message and exits. This includes the usage text and options section.
+This can be followed by an optional "helpText" message that the program may
+include to supply some additional information.
+The short option "-h" will be assigned as an alternative to this option as long as
+it is not already in use elsewhere.
+
+* **--version (-v)**
+Shows the program version number information.
+This is supplied by the program as the "versionText".
+If the short option "-v" has not already been assigned elsewhere, it may be used
+as an alternative.
+
+* **--about (-a)**
+Displays an about message for the program.
+Another optional feature to supply information about the program.
+This might include the version number, a realease date, an email address,
+company name, etc.
+The program supplies this as the "aboutText".
+The short option "-a" may also be used for this option as long as it is not
+already in use elsewhere.
+
+These options are available as long as the proper "text" information is supplied
+by the program.
+They will appear in a separate usage specification of the help output.
+If the usage text contains any of these options, they will appear as specified by
+the program.
+
+A program may choose to handle these options in another way or not at all.
+This is made possible by setting the operating variable "suppressHelp" to true.
+Add the options in the usage text and define member variables in the usual manner.
+
+    private final String usageText = "program --help | --version";
+    private boolean helpOption;
+    private boolean versionOption;
 
 ### Operating Variables
 
