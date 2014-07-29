@@ -4,7 +4,7 @@
 | [Command Line](#command-line-syntax)
 | [Usage Text](#usage-text-syntax)
 | [Help Facilities](#help-facilities)
-| [Operating Variables](#operating-variables)
+| [Operating Modes](#operating-modes)
 
 ArgFace
 =======
@@ -116,7 +116,33 @@ The creation phase of ArgFace establishes which model will be used.
 This is performed with code of the form:
 
     ArgFace argFace = <Model>.create(usageText, object);
-    
+
+ArgPrototype and ArgStandard both use reflection. They require that member variables
+be declared for each option, option argument, and operand. Operating mode variables
+can also be declared for these models. Some of the optional material like the version
+text should also be declared as class member variables.
+
+The ArgProcedure model does not use any reflection and acquires all of its values
+from ArgFace methods. This model does not require that member variables be declared
+for use by the interface.
+
+The following table shows the correspondence between the reflective and procedural
+models.
+
+|----|
+| Name | Variable | Method |
+|----|----|----|
+| version text | versionText | setVersionText(text) |
+| about text | aboutText | setAboutText(text) |
+| help text | helpText | setHelpText(text) |
+| allow override | allowOverride | setAllowOverride(boolean) |
+| suppress help | suppressHelp | setSuppressHelp(boolean) |
+| posix format | posixFormat | setPosixFormat(boolean) |
+| sort options | sortOptions | setSortOptions(boolean) |
+| option suffix | optionSuffix | setOptionSuffix(String) |
+| operand suffix | operandSuffix | setOperandSuffix(String) |
+|----|----|----|
+
 ### Options
 
 ArgFace supports both short, one-letter options and the longer GNU style options.
@@ -131,11 +157,11 @@ Short options may be specified in a letter group.
      
 Long option names may use letters, digits, the dash (hyphen) or the underscore.
 
-    --long
-    --dashes-join-words
-    --underscores_are_ok
-    --lowerCamelCase
-    --UpperCamelCase
+     --long
+     --dashes-join-words
+     --underscores_are_ok
+     --lowerCamelCase
+     --UpperCamelCase
 
 Each option may be defined with two variants. Usually there is a short option and a
 long option. But two long options may also be used.
@@ -171,8 +197,8 @@ The underscore is a valid character for java identifiers but the dash is not.
 ArgFace removes dashes from variable names and capitalizes the letter that follows
 to produce camel case. The underscore is preserved.
 
-    --base-dir => baseDirOption
-    --base_dir => base_dirOption
+     --base-dir => baseDirOption
+     --base_dir => base_dirOption
 
 The getters and setters always capitalize the first letter of long options.
 This means that you must not mix both title case and lower case for the same name.
@@ -208,6 +234,40 @@ same spelling.
      --Dir <path> => setDirPath, getDirPath (title case same as --dir above)
      --base-dir [path] => setBaseDirPath, getBaseDirPath
      --DIR [PATH] => setDIRPATH, getDIRPATH (capitals are preserved)
+
+Options may appear on the command line in any order. Options may also be repeated.
+The number of occurrences of an option is available to the program. An optional
+member variable may be declared to receive the count. It's name is constructed from
+the name of the option followed by the suffix "Count". The procedural alternative is
+the ArgFace method "count".
+
+    prog [-d] <file>...  (usage text)
+    $ prog -ddd file1  (command line)
+    private int dCount;  (member variable declaration)
+    int n = argFace.count("-d");  (the count method)
+
+Options which take an argument may or may not be repeated. By default, this situation
+is treated as an error. However, if the "allowOverwrite" operating mode is defined,
+then options with arguments can be repeated.
+
+But when an option is repeated with a new argument, which value will be returned?
+That is what the "allowOverwrite" operating mode is about. If set to true, "allowOverwrite" specifies that the last option argument will prevail.
+When set to false, the first option argument specified is the one returned.
+
+    prog [-e <pattern>] <file>...  (usage text)
+    private boolean allowOverwrite = true;  (operating mode variable)
+    $ prog -e abc -e 123 file1  (command line)
+    2 => eCount
+    "123" => ePattern
+
+To take more than one option argument value, specify the argument as repeatable.
+This turns the option argument member variable into a String array or list.
+
+    prog [-e <pattern>]... file...
+    private String [] ePattern;     (member variable declaration)
+    private List<String> ePattern;  (alternative)
+
+---
 
 In order to specify that an optional argument is included on the command line, and to differentiate the argument from other operands, an equal sign (=) or colon (:) is used
 to tie the option to the argument.
@@ -465,7 +525,7 @@ Add the options in the usage text and define member variables in the usual manne
     private boolean helpOption;
     private boolean versionOption;
 
-### Operating Variables
+### Operating Modes
 
 The following `boolean` variables define variations in the operation of ArgFace.
 If they are not defined, standard behavior will occur.
