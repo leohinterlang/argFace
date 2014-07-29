@@ -129,9 +129,9 @@ for use by the interface.
 The following table shows the correspondence between the reflective and procedural
 models.
 
-|----|
+
 | Name | Variable | Method |
-|----|----|----|
+| ---- | ---- | ---- |
 | version text | versionText | setVersionText(text) |
 | about text | aboutText | setAboutText(text) |
 | help text | helpText | setHelpText(text) |
@@ -141,7 +141,6 @@ models.
 | sort options | sortOptions | setSortOptions(boolean) |
 | option suffix | optionSuffix | setOptionSuffix(String) |
 | operand suffix | operandSuffix | setOperandSuffix(String) |
-|----|----|----|
 
 ### Options
 
