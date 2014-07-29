@@ -126,21 +126,21 @@ The ArgProcedure model does not use any reflection and acquires all of its value
 from ArgFace methods. This model does not require that member variables be declared
 for use by the interface.
 
-The following table shows the correspondence between the reflective and procedural
-models.
+The following table lists the variables and methods available in ArgFace.
 
+| Variable | Method | Description | Default |
+| ---- | ---- | :--- | ---- |
+| versionText | setVersionText(Text) | The version information text. | none |
+| aboutText | setAboutText(Text) | The about information text. | none |
+| helpText | setHelpText(Text) | The help additional text. | none |
+| allowOverwrite | setAllowOverwrite(boolean) | Overwrite operating mode. | error |
+| suppressHelp | setSuppressHelp(boolean) | Suppress help operating mode. | false |
+| posixFormat | setPosixFormat(boolean) | Posix format operating mode. | false |
+| sortOptions | setSortOptions(boolean) | Sort options operating mode. | false |
+| optionSuffix | setOptionSuffix(String) | Define option suffix. * | Option |
+| operandSuffix | setOperandSuffix(String) | Define operand suffix. * | Operand |
 
-| Name | Variable | Method |
-| ---- | ---- | ---- |
-| version text | versionText | setVersionText(text) |
-| about text | aboutText | setAboutText(text) |
-| help text | helpText | setHelpText(text) |
-| allow override | allowOverride | setAllowOverride(boolean) |
-| suppress help | suppressHelp | setSuppressHelp(boolean) |
-| posix format | posixFormat | setPosixFormat(boolean) |
-| sort options | sortOptions | setSortOptions(boolean) |
-| option suffix | optionSuffix | setOptionSuffix(String) |
-| operand suffix | operandSuffix | setOperandSuffix(String) |
+\* *Reflective models only.*
 
 ### Options
 
