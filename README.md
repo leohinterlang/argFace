@@ -122,9 +122,80 @@ be declared for each option, option argument, and operand. Operating mode variab
 can also be declared for these models. Some of the optional material like the version
 text should also be declared as class member variables.
 
-The ArgProcedure model does not use any reflection and acquires all of its values
-from ArgFace methods. This model does not require that member variables be declared
-for use by the interface.
+Here is one possible set of declarations for the reflective models.
+
+    // Text definitions.
+    private final String [] usageText = {
+        "Usage:",
+          "prog [-abc <feature>] <file>...",
+        "Options:",
+           "-a, --all Process files as a unit.",
+           "-b, --binary Binary mode.",
+           "-c Choose named feature."
+    };
+    private final String versionText = "prog version 1.0";
+    private final String aboutText = "prog processes files";
+    private final String helpText = "Available features:" +
+        "stop - discontinue on error" +
+        "log - send errors to the log file" +
+        "prompt - continuation prompt after an error";
+   
+    // Operating mode variables.
+    private boolean posixFormat = true;
+    private boolean sortOptions = true;
+   
+    // Option and Operand member variables.
+    private boolean aOption;
+    private boolean bOption;
+    private boolean cOption;
+    private String cFeature;
+    private String [] file;
+
+The reflective models are very similar. The only difference is that ArgStandard
+requires public getter and setter methods for all member variables.
+
+The ArgProcedure model does not use any reflection and communicates with the interface
+through method calls. This model does not require that member variables be declared
+for the options and operands. However, the text definitions will need to be included
+somewhere.
+
+This code fragment illustrates the use of the ArgProcedure model.
+
+    // Create the procedural model. No reflective object is required here.
+    ArgFace argFace = ArgProcedure.create(usageText, null);
+    if (argFace == null) {
+        System.exit(1);
+    }
+    // Set the text definitions.
+    argFace.setVersionText(versionText);
+    argFace.setAboutText(aboutText);
+    argFace.setHelpText(helpText);
+   
+    // Set operating modes.
+    argFace.setPosixFormat(true);
+    argFace.setSortOptions(true);
+   
+    // Parse the command line arguments.
+    int nArg = argFace.parse(args);
+    if (nArg < 0) {
+        System.exit(1);
+    }
+   
+    // Get option values.
+    boolean aOption = argFace.has("-a");
+    boolean bOption = argFace.has("-b");
+    boolean cOption = argFace.has("-c");
+   
+    // If -c get the feature name.
+    String cFeature = null;
+    if (cOption) {
+        cFeature = argFace.value("-c");
+    }
+    // Process the files.
+    List<String> files = argFace.valueList("<file>");
+    for (String file : files) {
+        process(file);
+    }
 
 The following table lists the variables and methods available in ArgFace.
 
@@ -339,7 +410,7 @@ determines what is assigned.
     "one" => firstOperand
     "two" => secondOperand
     
-    prog [<first>] <second> <third>  (usage text) TODO: Problem with this.
+    prog [<first>] <second> <third>  (usage text)
     $ prog two three  (command line)
     "two" => secondOperand
     "three" => thirdOperand
@@ -392,7 +463,6 @@ should make it clear when options are expected to precede the operands.
 
 To enforce the POSIX version of the command line format (options before operands),
 a program may define the operating variable "posixFormat" to be true.
-TODO: need a link to the posix sample code.
 
 As was already mentioned, options may be specified by the user on the command
 line with both a single dash or a double dash no matter whether the option is
