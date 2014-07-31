@@ -198,7 +198,7 @@ This code fragment illustrates the use of the ArgProcedure model.
         process(file);
     }
 
-The following table lists the variables and methods available in ArgFace.
+The following table lists some of the variables and methods available in ArgFace.
 
 | Variable | Method | Description | Default |
 | ---- | ---- | :--- | ---- |
