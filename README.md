@@ -28,30 +28,30 @@ Then it parses the command line to yield values for corresponding options and ar
 
 Here's a brief example:
 
-    public class Program {
-    	private final String usageText =
-    	  "Usage: program [-a] [-b/--brand] [-c <name>] [find <pattern>] <file>...";
-    	private boolean aOption;
-    	private boolean bOption;
-    	private boolean cOption;
-    	private String  cName;
-    	private boolean findOperand;
-    	private String  patternOperand;
-    	private String [] fileOperand;
-    	
-		public static void main (String [] args) {
-      		Program prog = new Program();
-      		ArgFace argFace = ArgPrototype.create(usageText, prog);
-      		if (argFace == null) {
-      			System.exit(1);
-      		}
-      		int nArg = argFace.parse(args);
-      		if (nArg < 0) {
-      			System.exit(1);
-      		}
-      		if (prog.aOption) {
-      			System.out.println("-a option specified");
-			...
+    public class SampleOne {
+	    private final String usageText =
+                "Usage: program [-a] [-b/--brand] [-c <name>] [find <pattern>] <file>...";
+        private boolean aOption;
+        private boolean bOption;
+        private boolean cOption;
+        private String  cName;
+        private boolean findOperand;
+        private String  patternOperand;
+        private String [] fileOperand;
+
+        public static void main (String [] args) {
+            SampleOne prog = new SampleOne();
+            ArgFace argFace = ArgPrototype.create(prog.usageText, prog);
+            if (argFace == null) {
+                System.exit(1);
+            }
+            int nArg = argFace.parse(args);
+            if (nArg < 0) {
+                System.exit(1);
+            }
+            if (prog.aOption) {
+                System.out.println("-a option specified");
+            ...
 
 This example creates an ArgFace object using the ArgPrototype model.
 Then the command line arguments are parsed.

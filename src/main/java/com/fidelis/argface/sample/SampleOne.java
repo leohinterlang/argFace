@@ -58,8 +58,12 @@ public class SampleOne {
 		} else {
 			System.out.println("'find <pattern>' NOT specified");
 		}
-		for (String file : prog.fileOperand) {
-			System.out.println("<file> = " + file);
+		if (prog.fileOperand != null) {
+		    for (String file : prog.fileOperand) {
+			    System.out.println("<file> = " + file);
+		    }
+		} else {
+			System.out.println("<file> operand NOT specified");
 		}
 	}
 }
