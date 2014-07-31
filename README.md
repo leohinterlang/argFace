@@ -143,6 +143,7 @@ Here is one possible set of declarations for the reflective models.
     // Operating mode variables.
     private boolean posixFormat = true;
     private boolean sortOptions = true;
+    private String operandSuffix = "";
    
     // Option and Operand member variables.
     private boolean aOption;
@@ -221,10 +222,15 @@ Short options begin with a single dash (hyphen). Long options begin with two das
      -a    (short option)
      --all (long option)
 
-Short options may be specified in a letter group.
+Short options may be specified in a letter group. The last option in the group
+may declare an argument.
 
-     -abc (same as) -a -b -c
-     
+     [-abc] => [-a] [-b] [-c]
+     [-abc <name>] => [-a] [-b] [-c <name>]
+
+Short options may use letters or digits. The use of digits is discouraged but are
+available for backward compatibility with older utilities.
+
 Long option names may use letters, digits, the dash (hyphen) or the underscore.
 
      --long
@@ -369,8 +375,8 @@ multiple usage specifications with the option indicating which one applies.
 
 ### Operands
 
-Anything in the usage text that is not an option is an operand. Variable operands are
-surrounded by angle brackets. Literal operands are plain text.
+Anything in the usage text that is not an option or option argument is an operand.
+Variable operands are surrounded by angle brackets. Literal operands are plain text.
 
     <file> (variable operand)
     match  (literal operand)
@@ -443,7 +449,7 @@ letter options.
     [--ace]  (long option)
     
     $ program -ace  (ambiguous)
-    $ program --ace (not ambiguous)
+    $ program --ace (unambiguous)
     
 This implementation will detect this situation and treat a single dash long
 option as an error if there is a corresponding letter group of the same
