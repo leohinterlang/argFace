@@ -207,7 +207,9 @@ public class ArgParseUsage {
             
             // Option indicator.
             else if (token.equals("-")) {
-                singleDash();
+                if (! singleDash()) {
+                	return "error";
+                }
             }
             
             // Mutual exclusion or alternate option name.
