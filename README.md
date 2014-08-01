@@ -135,10 +135,12 @@ Here is one possible set of declarations for the reflective models.
     };
     private final String versionText = "prog version 1.0";
     private final String aboutText = "prog processes files";
-    private final String helpText = "Available features:" +
-        "stop - discontinue on error" +
-        "log - send errors to the log file" +
-        "prompt - continuation prompt after an error";
+    private final String [] helpText = {
+        "Available features:",
+        "stop - discontinue on error",
+        "log - send errors to the log file",
+        "prompt - continuation prompt after an error"
+    };
    
     // Operating mode variables.
     private boolean posixFormat = true;
@@ -162,8 +164,8 @@ somewhere.
 
 This code fragment illustrates the use of the ArgProcedure model.
 
-    // Create the procedural model. No reflective object is required here.
-    ArgFace argFace = ArgProcedure.create(usageText, null);
+    // Create the procedural model.
+    ArgFace argFace = ArgProcedure.create(usageText, this);
     if (argFace == null) {
         System.exit(1);
     }
