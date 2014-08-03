@@ -341,9 +341,19 @@ When set to false, the first option argument specified is the one returned.
 To take more than one option argument value, specify the argument as repeatable.
 This turns the option argument member variable into a String array or list.
 
-    prog [-e <pattern>]... file...
+    prog [-e <pattern>]... <file>...
     private String [] ePattern;     (member variable declaration)
     private List<String> ePattern;  (alternative)
+
+All options may be specified within the "options" section of the usage text. The usage
+specification should include the special entry "[options]" for each usage that will
+accept all of the options.
+
+    Usage:
+        prog [options] <file>...
+    Options:
+        -a, --all Process all files as a unit.
+        ...
 
 ---
 
