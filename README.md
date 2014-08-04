@@ -452,10 +452,10 @@ Because of the historical significance of a number of Unix utilities, the
 Posix standards are a serious concern for this effort. Therefore, option
 letters or short options are given primary support.
 
-The GNU form of long options is also available. The only conflict here is
-that a command line option may be specified with a single hyphen even for the
-long names and that this might be unintentionally mistaken for a group of
-letter options.
+The GNU form of long options is also available. ArgFace permits
+long options to be entered on the command line with a single dash: `-long-option`.
+The only conflict here is that this might be unintentionally mistaken for a
+group of short options.
 
     [-abcde] (letter options)
     [--ace]  (long option)
