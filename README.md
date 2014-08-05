@@ -355,7 +355,6 @@ accept all of the options.
         -a, --all Process all files as a unit.
         ...
 
----
 
 In order to specify that an optional argument is included on the command line, and to differentiate the argument from other operands, an equal sign (=) or colon (:) is used
 to tie the option to the argument.
