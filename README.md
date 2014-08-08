@@ -55,8 +55,8 @@ Here's a brief example:
 
 This example creates an ArgFace object using the ArgPrototype model.
 Then the command line arguments are parsed.
-Finally, the boolean class member variable `aOption` is used
-to navigate through the program.
+Lastly, the boolean class member variable `aOption` is used
+to navigate the program.
 
 The ArgPrototype model uses reflection to access private member variables.
 Another model provides standard access through public getter and setter methods.
