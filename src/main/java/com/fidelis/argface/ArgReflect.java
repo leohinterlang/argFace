@@ -19,40 +19,23 @@ import java.lang.reflect.Modifier;
  * 
  */
 public class ArgReflect {
-    private static ArgReflect instance;
     private Object            object;
     private Class<?>          objectClass;
     private boolean           privateAccess;
     
     /**
-     * Private no argument constructor.
+     * No argument constructor.
      */
-    private ArgReflect () {
+    public ArgReflect () {
     }
     
     /**
-     * Creates or obtains the one and only {@code ArgReflect} instance.
+     * Constructor that sets the object to be accessed through reflection.
      * 
-     * @return the one and only {@code ArgReflect} instance
+     * @param pojo the Object accessed through reflection
      */
-    public static ArgReflect getInstance () {
-        if (instance == null) {
-            instance = new ArgReflect();
-        }
-        return instance;
-    }
-
-    /**
-     * Creates or obtains the one and only {@code ArgReflect} instance
-     * and sets the object to be accessed through reflection.
-     * 
-     * @param object the Object accessed thru reflection
-     * @return the new {@code ArgReflect} instance
-     */
-    public static ArgReflect getInstance (Object object) {
-        ArgReflect reflect = getInstance();
-        reflect.setObject(object);
-        return reflect;
+    public ArgReflect (Object pojo) {
+    	setObject(pojo);
     }
     
     /**
@@ -63,6 +46,15 @@ public class ArgReflect {
     public void setObject (Object object) {
         this.object = object;
         this.objectClass = object.getClass();
+    }
+    
+    /**
+     * Returns the {@code Object} being accessed through reflection.
+     * 
+     * @return the reflection object
+     */
+    public Object getObject () {
+    	return object;
     }
     
     /**
@@ -151,7 +143,7 @@ public class ArgReflect {
     }
     
     /**
-     * Returns a {@code String} from a getter method yields a String array.
+     * Returns a {@code String} from a getter method which yields a String array.
      * The Strings from the array are appended together with an optional
      * newline between each element.
      * 
@@ -205,6 +197,15 @@ public class ArgReflect {
         return sb.toString();
     }
     
+    /**
+     * Returns a {@code Boolean} value for the named boolean variable.
+     * If a getter of the form, {@code isVariable} is found, it is used to
+     * retrieve the value. Otherwise, the name is used to access the field
+     * of the variable directly. Any problems will return a {@code null} value.
+     * 
+     * @param name the variable name
+     * @return the {@code Boolean} value or null
+     */
     Boolean getBoolean (String name) {
         Method getter = findIsBoolean(name);
         if (getter != null) {
@@ -217,6 +218,12 @@ public class ArgReflect {
         return null;
     }
     
+    /**
+     * Returns a {@code Boolean} value using a getter method.
+     * 
+     * @param getter the getter {@code Method}
+     * @return a {@code Boolean} value or null
+     */
     Boolean getBoolean (Method getter) {
         Boolean value = null;
         try {
@@ -229,6 +236,12 @@ public class ArgReflect {
         return value;
     }
     
+    /**
+     * Returns a {@code Boolean} value from a {@code Field}.
+     * 
+     * @param field the value {@code Field}
+     * @return a {@code Boolean} value or null
+     */
     Boolean getBoolean (Field field) {
         Boolean value = null;
         try {
@@ -237,6 +250,40 @@ public class ArgReflect {
         } catch (IllegalAccessException e) {
         }
         return value;
+    }
+    
+    Integer getInteger (String name) {
+    	Method getter = findGetInteger(name);
+    	if (getter != null) {
+    		return getInteger(getter);
+    	}
+    	Field field = findField(name, int.class);
+    	if (field != null) {
+    		return getInteger(field);
+    	}
+    	return null;
+    }
+    
+    Integer getInteger (Method getter) {
+    	Integer value = null;
+    	try {
+			value = (Integer) getter.invoke(object);
+		} catch (IllegalAccessException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+    	return value;
+    }
+    
+    Integer getInteger (Field field) {
+    	Integer value = null;
+    	try {
+			value = (Integer) field.getInt(object);
+		} catch (IllegalArgumentException e) {
+		} catch (IllegalAccessException e) {
+		}
+    	return value;
     }
 
     /**
@@ -252,7 +299,7 @@ public class ArgReflect {
 
     /**
      * Finds a getter {@code Method} ("is") for a named variable that returns
-     * a {@code boolean}.
+     * a {@code boolean} value.
      * 
      * @param name the variable name for the getter
      * @return the getter {@code Method} or null
@@ -260,6 +307,17 @@ public class ArgReflect {
     Method findIsBoolean (String name) {
         String methodName = ArgUtil.camelCase("is", name);
         return findMethod(methodName, boolean.class);
+    }
+    
+    /**
+     * Finds a getter {@code Method} for a named variable that returns
+     * an {@code int} value.
+     * 
+     * @param name the variable name for the getter
+     * @return the getter {@code Method} of null
+     */
+    Method findGetInteger (String name) {
+    	return findGetter(name, int.class);
     }
 
     /**
@@ -270,7 +328,7 @@ public class ArgReflect {
      * @param returnClass the {@code Class} that the getter returns
      * @return the getter {@code Method} or null
      */
-    Method findGetter (String name, Class<?> returnClass) {
+    public Method findGetter (String name, Class<?> returnClass) {
         String methodName = ArgUtil.camelCase("get", name);
         return findMethod(methodName, returnClass);
     }
@@ -283,7 +341,7 @@ public class ArgReflect {
      * @param paramClass the class of the variable to be set
      * @return the setter {@code Method} or null
      */
-    Method findSetter (String fieldName, Class<?> paramClass) {
+    public Method findSetter (String fieldName, Class<?> paramClass) {
         String methodName = ArgUtil.camelCase("set", fieldName);
         return findOneParam(methodName, paramClass);
     }
@@ -295,7 +353,7 @@ public class ArgReflect {
      * @param paramClass the class of the parameter
      * @return the {@code Method} or null
      */
-    Method findOneParam (String methodName, Class<?> paramClass) {
+    public Method findOneParam (String methodName, Class<?> paramClass) {
         Method method = null;
         Class<?> [] paramTypes = new Class<?>[1];
         paramTypes[0] = paramClass;
@@ -316,7 +374,7 @@ public class ArgReflect {
      * @param returnClass the class of the return value or null
      * @return the {@code Method} or null
      */
-    Method findMethod (String methodName, Class<?> returnClass) {
+    public Method findMethod (String methodName, Class<?> returnClass) {
         Method method = null;
         try {
             method = objectClass.getMethod(methodName);
@@ -342,7 +400,7 @@ public class ArgReflect {
      * @param fieldClass the class of the variable or null
      * @return the {@code Field} for the variable
      */
-    Field findField (String fieldName, Class<?> fieldClass) {
+    public Field findField (String fieldName, Class<?> fieldClass) {
         Field field = null;
         try {
             if (privateAccess) {
@@ -380,7 +438,7 @@ public class ArgReflect {
      * @param value the {@code Object} holding the value to set
      * @return {@code true} if successful
      */
-    boolean setValue (Method setter, Object value) {
+    public boolean setValue (Method setter, Object value) {
         boolean status = false;
         try {
             setter.invoke(object, value);
@@ -403,7 +461,7 @@ public class ArgReflect {
      * @param value the {@code Object} containing the value to set
      * @return {@code true} if successful
      */
-    boolean setValue (Field field, Object value) {
+    public boolean setValue (Field field, Object value) {
         boolean status = false;
         try {
             field.set(object, value);

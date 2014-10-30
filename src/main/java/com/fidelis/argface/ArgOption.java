@@ -207,6 +207,7 @@ public class ArgOption implements Comparable<ArgOption> {
 
     /**
      * Sets the alternate name of this option.
+     * If the alternate name is shorter than the name, these values are swapped.
      * 
      * @param altName the alternate name
      */

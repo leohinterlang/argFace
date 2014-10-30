@@ -16,8 +16,14 @@ import com.fidelis.argface.Debug;
  */
 public class SampleCLI {
 	private final String [] usageText = {
-			"Usage: sample [-a] [-b/--brand] [-c <name>] [-d/--dir <path>]",
-			  "[find <pattern>] <file>...",
+			"Usage: sample [-a] [-b/--brand] [-c] [-d/--dir [path]] [-e] [--ace]",
+			  "[-A] 'Capital letter option'",
+			  "[-x/--Extra[what]]'Just a test case.'",
+			  "[--underscores_join_words]",
+			  "[--ace]",
+			  //"[<first>] <second> [<third>]",
+			  //"one [two] three",
+			  "<file>...",
 			"Options:",
 			  "-a, --all Process all files as a unit.",
 			  "-b Brand each line.",
@@ -33,11 +39,20 @@ public class SampleCLI {
 	};
 			
 	private boolean		aOption;
+	private int         aCount;
 	private boolean		bOption;
 	private boolean		cOption;
-	private String		 cName;
+	private String []     cName;
 	private boolean     dirOption;
 	private String      dirPath;
+	private boolean     eOption;
+	private boolean     aceOption;
+	
+	private boolean AOption;
+	private boolean extraOption;
+	private boolean xOption;
+	private String  xWhat;
+	private boolean underscores_join_wordsOption;
 	
 	private boolean     helpOption;
 	private boolean     versionOption;
@@ -46,20 +61,33 @@ public class SampleCLI {
 	private boolean		findOperand;
 	private String		 patternOperand;
 	private String[]	   fileOperand;
+	
+	private String firstOperand;
+	private String secondOperand;
+	private String thirdOperand;
+	private boolean oneOperand;
+	private boolean twoOperand;
+	private boolean threeOperand;
+	private ArgFace argFace;
 
 	public boolean parse (String [] args) {
-		// Debug.setTrace(true);
-		// Debug.setVerbose(true);
-		ArgFace argFace = ArgStandard.create(usageText, this);
+		 Debug.setTrace(true);
+		 Debug.setVerbose(true);
+		argFace = ArgPrototype.create(usageText, this);
 		if (argFace == null) {
 			return false;
 		}
 		argFace.printHelp();
+		argFace.setPatternWatch(true);
 		int nArg = argFace.parse(args);
 		if (nArg < 0) {
 			return false;
 		}
 		return true;
+	}
+	
+	public void report (String selection) {
+		argFace.report(selection);
 	}
 
 	/**
@@ -140,6 +168,34 @@ public class SampleCLI {
 	}
 
 	/**
+	 * @return the aOption
+	 */
+	public boolean isAOption () {
+		return AOption;
+	}
+
+	/**
+	 * @param aOption the aOption to set
+	 */
+	public void setAOption (boolean aOption) {
+		AOption = aOption;
+	}
+
+	/**
+	 * @return the aCount
+	 */
+	public int getaCount () {
+		return aCount;
+	}
+
+	/**
+	 * @param aCount the aCount to set
+	 */
+	public void setaCount (int aCount) {
+		this.aCount = aCount;
+	}
+
+	/**
 	 * @return the bOption
 	 */
 	public boolean isbOption () {
@@ -168,20 +224,6 @@ public class SampleCLI {
 	}
 
 	/**
-	 * @return the cName
-	 */
-	public String getcName () {
-		return cName;
-	}
-
-	/**
-	 * @param cName the cName to set
-	 */
-	public void setcName (String cName) {
-		this.cName = cName;
-	}
-
-	/**
 	 * @return the dirOption
 	 */
 	public boolean isDirOption () {
@@ -207,6 +249,34 @@ public class SampleCLI {
 	 */
 	public void setDirPath (String dirPath) {
 		this.dirPath = dirPath;
+	}
+
+	/**
+	 * @return the eOption
+	 */
+	public boolean iseOption () {
+		return eOption;
+	}
+
+	/**
+	 * @param eOption the eOption to set
+	 */
+	public void seteOption (boolean eOption) {
+		this.eOption = eOption;
+	}
+
+	/**
+	 * @return the aceOption
+	 */
+	public boolean isAceOption () {
+		return aceOption;
+	}
+
+	/**
+	 * @param aceOption the aceOption to set
+	 */
+	public void setAceOption (boolean aceOption) {
+		this.aceOption = aceOption;
 	}
 
 	/**
@@ -249,6 +319,92 @@ public class SampleCLI {
 	 */
 	public void setFileOperand (String [] fileOperand) {
 		this.fileOperand = fileOperand;
+	}
+	
+	/**
+	 * @return the extraOption
+	 */
+	public boolean isExtraOption () {
+		return extraOption;
+	}
+
+	/**
+	 * @param extraOption the extraOption to set
+	 */
+	public void setExtraOption (boolean extraOption) {
+		this.extraOption = extraOption;
+	}
+
+	/**
+	 * @return the xWhat
+	 */
+	public String getxWhat () {
+		return xWhat;
+	}
+
+	/**
+	 * @param xWhat the xWhat to set
+	 */
+	public void setxWhat (String xWhat) {
+		this.xWhat = xWhat;
+	}
+
+
+	/**
+	 * @return the underscores_join_wordsOption
+	 */
+	public boolean isUnderscores_join_wordsOption () {
+		return underscores_join_wordsOption;
+	}
+
+	/**
+	 * @param underscores_join_wordsOption the underscores_join_wordsOption to set
+	 */
+	public void setUnderscores_join_wordsOption (
+			boolean underscores_join_wordsOption) {
+		this.underscores_join_wordsOption = underscores_join_wordsOption;
+	}
+
+	/**
+	 * @return the firstOperand
+	 */
+	public String getFirstOperand () {
+		return firstOperand;
+	}
+
+	/**
+	 * @param firstOperand the firstOperand to set
+	 */
+	public void setFirstOperand (String firstOperand) {
+		this.firstOperand = firstOperand;
+	}
+
+	/**
+	 * @return the secondOperand
+	 */
+	public String getSecondOperand () {
+		return secondOperand;
+	}
+
+	/**
+	 * @param secondOperand the secondOperand to set
+	 */
+	public void setSecondOperand (String secondOperand) {
+		this.secondOperand = secondOperand;
+	}
+
+	/**
+	 * @return the thirdOperand
+	 */
+	public String getThirdOperand () {
+		return thirdOperand;
+	}
+
+	/**
+	 * @param thirdOperand the thirdOperand to set
+	 */
+	public void setThirdOperand (String thirdOperand) {
+		this.thirdOperand = thirdOperand;
 	}
 
 }

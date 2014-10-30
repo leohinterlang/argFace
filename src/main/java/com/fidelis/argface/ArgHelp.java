@@ -10,14 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Option Help Class.
+ * ArgFace Help Class.
  * 
  * @version 1.0.0
  * @author Leo Hinterlang
  *
  */
 public class ArgHelp {
-    private static ArgHelp  instance = new ArgHelp();
     private ArgList         argList;
     private List<ArgOption> optionList;
     private boolean         suppressHelp;
@@ -28,22 +27,6 @@ public class ArgHelp {
     private List<ArgNode>   problemUsage = new ArrayList<ArgNode>();
     private List<String>    problemText  = new ArrayList<String>();
     
-    /**
-     * Private no argument constructor.
-     */
-    private ArgHelp () {
-    }
-    
-    /**
-     * Obtains the one and only {@code ArgHelp} instance.
-     * 
-     * @return the one and only {@code ArgHelp} instance
-     */
-    public static ArgHelp getInstance () {
-        return instance;
-    }
-    
-
     /**
      * Sets the argument list.
      * 

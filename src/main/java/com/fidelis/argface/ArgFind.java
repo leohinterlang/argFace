@@ -18,27 +18,42 @@ import java.util.List;
  *
  */
 public class ArgFind {
-    private static ArgFind instance = new ArgFind();
     private ArgReflect     reflect;
-    private ArgUtil        util;
+    private ArgUtil        util = ArgUtil.getInstance();
     private String         operandSuffix;
     private String         optionSuffix;
     
     /**
-     * Private no argument constructor.
+     * No argument constructor.
      */
-    private ArgFind () {
-        reflect = ArgReflect.getInstance();
-        util = ArgUtil.getInstance();
+    public ArgFind () {
     }
     
     /**
-     * Creates or obtains the one and only {@code ArgFind} instance.
+     * Constructs a new {@code ArgFind} instance with the specified {@code ArgReflect} object.
      * 
-     * @return the one and only {@code ArgFind} instance
+     * @param reflect the {@code ArgReflect} object
      */
-    public static ArgFind getInstance () {
-        return instance;
+    public ArgFind (ArgReflect reflect) {
+    	setReflect(reflect);
+    }
+    
+    /**
+     * Sets the {@code ArgReflect} object for this {@code ArgFind} instance.
+     * 
+     * @param reflect the {@code ArgReflect} object
+     */
+    public void setReflect (ArgReflect reflect) {
+		this.reflect = reflect;
+	}
+    
+    /**
+     * Returns the {@code ArgReflect} object for this {@code ArgFind} instance.
+     * 
+     * @return the {@code ArgReflect} object
+     */
+    public ArgReflect getReflect () {
+    	return reflect;
     }
     
     private void setup () {
@@ -68,6 +83,8 @@ public class ArgFind {
   
     /**
      * Finds a setter method for the specified operand.
+     * This method only works for {@code boolean} and {@code String} setters and
+     * for repeating operands of type {@code String[]} or {@code List}.
      * 
      * @param operand the operand to match to a setter method
      * @return the corresponding setter {@code Method}
@@ -100,6 +117,8 @@ public class ArgFind {
     
     /**
      * Finds a field for the specified operand.
+     * This method only works for {@code boolean} and {@code String} fields and
+     * for repeating operands of types {@code String[]} or {@code List}.
      * 
      * @param operand the operand to match to a member variable
      * @return the corresponding variable {@code Field}

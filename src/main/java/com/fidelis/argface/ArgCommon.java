@@ -17,34 +17,52 @@ import java.util.List;
  * @author Leo Hinterlang
  *
  */
+/**
+ * ArgCommon
+ *
+ * @version 1.0.0
+ * @author Leo Hinterlang
+ *
+ */
 public class ArgCommon {
-    private static ArgCommon instance;
     private ArgReflect reflect;
     private ArgFind finder;
     
     /**
-     * Private no argument constructor.
+     * No argument constructor.
      */
-    private ArgCommon () {
+    public ArgCommon () {
     }
     
     /**
-     * Creates or obtains the one and only {@code ArgCommon} instance.
-     * 
-     * @return the one and only {@code ArgCommon} instance
+     * Constructor that sets the {@code ArgReflect} object for this instance.
      */
-    public static ArgCommon getInstance () {
-        if (instance == null) {
-            instance = new ArgCommon();
-            instance.reflect = ArgReflect.getInstance();
-            instance.finder = ArgFind.getInstance();
-        }
-        return instance;
+    public ArgCommon (ArgReflect reflect) {
+    	setReflect(reflect);
+    	finder = new ArgFind(reflect);
     }
+    
+    /**
+     * Returns the {@code ArgReflect} object for this {@code ArgCommon} instance.
+     * 
+     * @return the {@code ArgReflect} object
+     */
+    public ArgReflect getReflect () {
+    	return reflect;
+    }
+    
+    /**
+     * Sets the {@code ArgReflect} object for this {@code ArgCommon} instance.
+     * 
+	 * @param reflect the {@code ArgReflect} object
+	 */
+	public void setReflect (ArgReflect reflect) {
+		this.reflect = reflect;
+	}
 
     /**
      * Returns the "usage" text defined by the program. If there is no {@code
-     * argUsageText} variable defined by the program, and no getter method to
+     * usageText} variable defined by the program, and no getter method to
      * retrieve it, a "Can't access" message is printed, and {@code null} is
      * returned.
      * 

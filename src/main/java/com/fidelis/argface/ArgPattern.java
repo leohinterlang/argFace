@@ -19,14 +19,12 @@ import java.util.List;
  *
  */
 public class ArgPattern {
-    
-    private static ArgPattern instance       = new ArgPattern();
 
     private ArgList           argList;
     private List<String>      nonOptionList;
     private boolean           patternWatch;
     private String            patternMatch;
-    private ArgHelp           help           = ArgHelp.getInstance();
+    private ArgHelp           help;
 
     private Deque<ArgList>    listStack      = new ArrayDeque<ArgList>();
 
@@ -41,20 +39,14 @@ public class ArgPattern {
     private int               patternMax;
 
     private List<ArgOperand>  targetOperands = new ArrayList<ArgOperand>();
-
-    /**
-     * Private no argument constructor.
-     */
-    private ArgPattern () {
-    }
     
     /**
-     * Returns the one and only {@code ArgPattern} instance.
+     * Sets the reference to the {@code ArgHelp} object.
      * 
-     * @return the one and only {@code ArgPattern} instance
+     * @param help the ArgHelp reference
      */
-    public static ArgPattern getInstance () {
-        return instance;
+    public void setHelp (ArgHelp help) {
+    	this.help = help;
     }
     
     /**
@@ -248,7 +240,9 @@ public class ArgPattern {
 
             // Variable.
             else if (c == 'V') {
-                ++nodeIndex;
+            	
+            	// Get the variable node.
+            	node = patternList.get(nodeIndex++);
 
                 // Accept the next non-option argument.
                 if (argIndex >= argCount) {
@@ -336,6 +330,9 @@ public class ArgPattern {
                 
                 // South is null.
                 else {
+                	trace("south is NULL", failNode.brief());
+                	
+                	// Fail node optional?
                     if (failNode.isOptional()) {
                         trace("end alternatives", sb.toString());
                         showNext = true;
@@ -343,7 +340,6 @@ public class ArgPattern {
                         buildReduce(failNode, sb);
                         continue;
                     }
-                    trace("south is NULL", failNode.brief());
                     return null;
                 }
             }
@@ -384,6 +380,11 @@ public class ArgPattern {
                            buildLiteral(node, sb);
                        }
                    } else {
+                	   if (node.isOptional()) {
+                		   trace("optional", node.brief());
+                		   lastBase = node;
+                		   lastFail = node;
+                	   }
                        buildVariable(node, sb);
                    }
                } else if (node.isGroup()) {
@@ -491,7 +492,7 @@ public class ArgPattern {
     }
     
     private void adjustCount (ArgNode node) {
-        ++patternMin;
+    	++patternMin;
         if (node.isRepeat()) {
             patternMax = 999;
         }

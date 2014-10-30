@@ -17,7 +17,6 @@ import java.util.List;
  *
  */
 public class ArgParseUsage {
-    private static ArgParseUsage instance   = new ArgParseUsage();
 
     private TokenSource          source;
     private final String         delimiters = " \t\n\'-+|[]<>()=:,/";
@@ -34,21 +33,6 @@ public class ArgParseUsage {
     private List<ArgOperand>     varList    = new ArrayList<ArgOperand>();
     private List<ArgOperand>     litList    = new ArrayList<ArgOperand>();
     private List<ArgOption>      optionList = new ArrayList<ArgOption>();
-    
-    /**
-     * Private no argument constructor.
-     */
-    private ArgParseUsage () {
-    }
-    
-    /**
-     * Obtains the one and only {@code ArgParseUsage} instance.
-     * 
-     * @return the one and only {@code ArgParseUsage} instance
-     */
-    public static ArgParseUsage getInstance () {
-        return instance;
-    }
     
     /**
      * Parses the specified usage text.
@@ -244,7 +228,9 @@ public class ArgParseUsage {
             
             // Literal operand.
             else {
-                literal(token);
+            	if (!token.isEmpty()) {
+            		literal(token);
+            	}
             }
             
             // Get next token.

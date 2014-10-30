@@ -21,6 +21,7 @@ public abstract class ArgBase implements ArgFace {
     private ArgParseUsage    parser;
     private ArgHelp          help;
     private ArgUtil          util;
+    private ArgPattern		 pattern;
 
     private String           programName;
     private String           usageText;
@@ -29,7 +30,8 @@ public abstract class ArgBase implements ArgFace {
     private String           helpText;
     private String           optionSuffix;
     private String           operandSuffix;
-
+    
+    // Operating variables.
     private Boolean          allowOverwrite;
     private Boolean          suppressHelp;
     private Boolean          posixFormat;
@@ -50,10 +52,12 @@ public abstract class ArgBase implements ArgFace {
     private boolean          preParseDone;
     private String            patternMatch;
 
-    protected ArgBase() {
-        parser = ArgParseUsage.getInstance();
-        help = ArgHelp.getInstance();
+    protected ArgBase () {
+        parser = new ArgParseUsage();
+        help = new ArgHelp();
         util = ArgUtil.getInstance();
+        util.setBase(this);
+        pattern = new ArgPattern();
     }
 
     protected String modelGetUsageText () {
@@ -232,14 +236,14 @@ public abstract class ArgBase implements ArgFace {
         return nonOptionList;
     }
 
-    private boolean checkOption (String name) {
+    boolean checkOption (String name) {
         if (name.startsWith("<")) {
             return false;
         }
         return true;
     }
 
-    private boolean checkOperand (String name) {
+    boolean checkOperand (String name) {
         if (name.startsWith("-")) {
             return false;
         }
@@ -253,7 +257,7 @@ public abstract class ArgBase implements ArgFace {
      * @param name the option name
      * @return the {@code ArgOption} or null
      */
-    private ArgOption findNamedOption (String name) {
+    ArgOption findNamedOption (String name) {
         if (optionList == null) {
             return null;
         }
@@ -273,7 +277,7 @@ public abstract class ArgBase implements ArgFace {
      * @param name the operand name
      * @return the {@code ArgOperand} or null
      */
-    private ArgOperand findNamedOperand (String name) {
+    ArgOperand findNamedOperand (String name) {
         if (name.startsWith("<")) {
             name = name.substring(1);
         }
@@ -600,6 +604,15 @@ public abstract class ArgBase implements ArgFace {
      */
     public String getPatternMatch () {
         return patternMatch;
+    }
+    
+    /**
+     * Reports the results of command line parsing.
+     * 
+     * @param selection indicates the desired output.
+     */
+    public void report (String selection) {
+    	ArgReport.report(selection, this);
     }
 
     /**
@@ -978,7 +991,6 @@ public abstract class ArgBase implements ArgFace {
     private int parseArgTwo (ArgNode usageNode) {
         
         // Setup for patterns.
-        ArgPattern pattern = ArgPattern.getInstance();
         pattern.setArgList(argList);
         pattern.setNonOptionList(nonOptionList);
         pattern.setPatternWatch(patternWatch);
@@ -1185,11 +1197,14 @@ public abstract class ArgBase implements ArgFace {
         checkAllOptions();
         
         // Initialize help.
-        help = ArgHelp.getInstance();
         help.setArgList(argList);
         help.setOptionList(optionList);
        
         return status;
+    }
+    
+    public ArgHelp getHelp () {
+    	return help;
     }
     
     private boolean preParse () {

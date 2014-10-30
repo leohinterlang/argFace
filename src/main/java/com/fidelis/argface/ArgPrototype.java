@@ -26,14 +26,14 @@ public class ArgPrototype extends ArgBase implements ArgFace {
      * Private no argument constructor.
      */
     private ArgPrototype () {
-        reflect = ArgReflect.getInstance();
+        reflect = new ArgReflect();
         reflect.setPrivateAccess(true);
-        common = ArgCommon.getInstance();
+        common = new ArgCommon(reflect);
     }
     
     /**
      * Creates or obtains the one and only {@code ArgPrototype} instance.
-     * Once created, this method may be used anytime to obtain this instance.
+     * Once created, this method may be used at any time to obtain this instance.
      * 
      * @return the one and only {@code ArgPrototype} instance
      * @see #create(String)

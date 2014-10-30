@@ -15,6 +15,7 @@ package com.fidelis.argface;
 public class ArgUtil {
     
     private static ArgUtil instance = new ArgUtil();
+    private static ArgBase base;
     
     private String programName;
     private String operandSuffix;
@@ -33,6 +34,15 @@ public class ArgUtil {
      */
     public static ArgUtil getInstance () {
         return instance;
+    }
+    
+    /**
+     * Sets the reference to the {@code ArgBase} instance.
+     * 
+     * @param base the ArgBase reference
+     */
+    public void setBase(ArgBase base) {
+    	ArgUtil.base = base;
     }
     
     /**
@@ -112,15 +122,13 @@ public class ArgUtil {
      */
     public static String camelCase (String front, String back) {
         String camel = front;
-        if (back.length() > 1) {
-            if (Character.isUpperCase(back.charAt(1))) {
-                camel += back;
-            } else {
-                camel += Character.toUpperCase(back.charAt(0)) +
-                back.substring(1);
-            }
-        } else {
+        if ((back.length() > 1)
+        &&  (Character.isUpperCase(back.charAt(1)))) {
             camel += back;
+        }
+        else {
+        	camel += Character.toUpperCase(back.charAt(0)) +
+        			back.substring(1);
         }
         return camel;
     }
@@ -149,9 +157,9 @@ public class ArgUtil {
     
     /**
      * Prints a "Can't access" message for one or two option variable names
-     * from an {@code Option} object.
+     * from an {@code ArgOption} object.
      * 
-     * @param option the {@code Option} object
+     * @param option the {@code ArgOption} object
      */
     public static void cantAccess (ArgOption option) {
         String name = camelCase(option.getName());
@@ -165,9 +173,9 @@ public class ArgUtil {
 
     /**
      * Prints a "Can't access" message for one or two argument variable names
-     * from an {@code Option} object.
+     * from an {@code ArgOption} object.
      * 
-     * @param option the {@code Option} object
+     * @param option the {@code ArgOption} object
      */
     public static void cantAccessArg (ArgOption option) {
         String name = camelCase(option.getName());
@@ -180,6 +188,12 @@ public class ArgUtil {
         }
     }
     
+    /**
+     * Prints a "Can't access" message for the field name of an {@code ArgOperand}
+     * object.
+     * 
+     * @param operand the {@code ArgOperand} with a field name
+     */
     public static void cantAccess (ArgOperand operand) {
         String fieldName = operand.getFieldName();
         cantAccess(fieldName);
@@ -204,6 +218,11 @@ public class ArgUtil {
         printError("Can't access \"" + name + "\"");
     }
     
+    /**
+     * Prints the program argument Strings inside a set of quotes.
+     * 
+     * @param args the argument array of Strings
+     */
     public static void printArgs (String[] args) {
         StringBuilder sb = new StringBuilder();
         sb.append("    \"");
@@ -222,7 +241,7 @@ public class ArgUtil {
      * @param text the error message
      */
     public static void printError (String text) {
-        ArgHelp help = ArgHelp.getInstance();
+    	ArgHelp help = base.getHelp();
         help.printUsage();
         System.err.printf("%s: %s%n", instance.programName, text);
     }

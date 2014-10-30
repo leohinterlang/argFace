@@ -244,4 +244,12 @@ public interface ArgFace {
      */
     public void printHelp ();
     
+    /**
+     * Reports the results of command line parsing.
+     * The selection specifies what the report should show.
+     * 
+     * @param selection indicates the desired output
+     */
+    public void report (String selection);
+    
 }

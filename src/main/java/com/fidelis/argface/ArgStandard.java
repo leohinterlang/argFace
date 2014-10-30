@@ -16,61 +16,75 @@ import java.util.List;
  * @author Leo Hinterlang
  */
 public class ArgStandard extends ArgBase implements ArgFace {
-    private static ArgStandard instance;
     private ArgReflect reflect;
     private ArgCommon common;
     
-    private ArgStandard () {
-        reflect = ArgReflect.getInstance();
+    /**
+     * Protected no argument constructor.
+     */
+    protected ArgStandard () {
+        reflect = new ArgReflect();
         reflect.setPrivateAccess(false);
-        common = ArgCommon.getInstance();
+        common = new ArgCommon(reflect);
     }
     
     /**
-     * Creates or obtains the one and only {@code ArgStandard} instance.
+     * Creates a new {@code ArgStandard} instance.
      * 
-     * @return the one and only {@code ArgStandard} instance
+     * @return a new {@code ArgStandard} instance
      */
-    public static ArgStandard create () {
-        if (instance == null) {
-            instance = new ArgStandard();
-        }
-        return instance;
+    protected static ArgStandard create () {
+    	return new ArgStandard();
     }
     
-    public static ArgStandard create (String usageText) {
-        create().setUsageText(usageText);
-        return instance;
-    }
-    
-    public static ArgStandard create (String[] usageText) {
-        create().setUsageText(usageText);
-        return instance;
-    }
-    
-    public static ArgStandard create (String usageText, Object pojo) {
-        create().setUsageText(usageText);
-        if (instance.parseUsage(pojo)) {
+    /**
+     * Creates a new {@code ArgStandard} instance with the supplied usage specification
+     * text and command line variables bean.
+     * 
+     * @param usageText the usage specification text as a String
+     * @param bean the command line variables bean object
+     * @return a new {@code ArgStandard} instance or null on failure
+     */
+    public static ArgStandard create (String usageText, Object bean) {
+        ArgStandard instance = create();
+        instance.setUsageText(usageText);
+        if (instance.parseUsage(bean)) {
             return instance;
         }
         return null;
     }
     
-    public static ArgStandard create (String [] usageText, Object pojo) {
-        create().setUsageText(usageText);
-        if (instance.parseUsage(pojo)) {
+    /**
+     * Creates a new {@code ArgStandard} instance from the supplied usage specification
+     * text and command line variables bean.
+     * 
+     * @param usageText the usage specification text as an array of Strings
+     * @param bean the command line variables bean object
+     * @return a new {@code ArgStandard} instance or null on failure
+     */
+    public static ArgStandard create (String [] usageText, Object bean) {
+        ArgStandard instance = create();
+        instance.setUsageText(usageText);
+        if (instance.parseUsage(bean)) {
             return instance;
         }
         return null;
     }
     
-    private boolean parseUsage (Object pojo) {
-        reflect.setObject(pojo);
-        setProgramName(pojo.getClass().getSimpleName());
+    protected boolean parseUsage (Object bean) {
+        reflect.setObject(bean);
+        setProgramName(bean.getClass().getSimpleName());
         return (parseUsage());
     }
     
-    public int parse (String [] args) {
+    /**
+     * Parses the command line arguments for this argument interface model.
+     * 
+     * @param args the command line arguments
+     * @return the argument index of the first operand or a negative value on error 
+     * @see com.fidelis.argface.ArgFace#parse(java.lang.String[])
+     */
+    public int parse (String[] args) {
         return parseArguments(args);
     }
 

@@ -112,9 +112,10 @@ public class ArgSample {
     
     private void execute (String [] args) {
         
-        boolean verbose = false;
+        boolean verbose = true;
         
         Debug.setTrace(verbose);
+        Debug.setVerbose(verbose);
         show = verbose;
         skipBlank = true;
         

@@ -2,6 +2,7 @@
  *+
  *	SampleOne.java
  *	1.0.0  2014-07-31  Leo Hinterlang
+ *-
  */
 package com.fidelis.argface.sample;
 

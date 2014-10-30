@@ -58,28 +58,12 @@ public class Sample {
 		if (! cli.parse(args)) {
 			return false;
 		}
-		
 		// Display the CLI results.
-		System.out.println("Results:");
-		if (cli.isaOption()) {
-			System.out.println("-a");
-		}
-		if (cli.isbOption()) {
-			System.out.println("-b");
-		}
-		if (cli.iscOption()) {
-			System.out.println("-c " + cli.getcName());
-		}
-		if (cli.isDirOption()) {
-			System.out.println("--dir " + cli.getDirPath());
-		}
-		if (cli.isFindOperand()) {
-			System.out.println("find " + cli.getPatternOperand());
-		}
-		for (String filename : cli.getFileOperand()) {
-			System.out.println(filename);
-			processFile(filename);
-		}
+		System.out.println("Results ----");
+		System.out.println("Options:");
+		cli.report("options");
+		System.out.println("Operands:");
+		cli.report("operands");
 		return true;
 	}
 	
