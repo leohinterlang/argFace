@@ -166,7 +166,7 @@ public abstract class ArgBase implements ArgFace {
      * value of the operand is returned.
      * 
      * @param name the name of the argument
-     * @return the option argument or operand String
+     * @return the option argument or operand String or null
      */
     public String value (String name) {
         if (checkOption(name)) {
@@ -210,7 +210,7 @@ public abstract class ArgBase implements ArgFace {
      * Returns a list of Strings for the named argument.
      * 
      * @param name the argument name
-     * @return a list of Strings
+     * @return a list of Strings or null
      */
     public List<String> valueList (String name) {
         if (checkOption(name)) {

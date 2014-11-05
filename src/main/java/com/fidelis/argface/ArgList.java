@@ -20,6 +20,29 @@ public class ArgList {
     public ArgList () {
     }
     
+    public ArgNode getHome () {
+    	return home;
+    }
+    
+    /**
+     * Returns the current node.
+     * 
+     * @return the current node
+     */
+    public ArgNode getCurrent () {
+        return curr;
+    }
+    
+    /**
+     * Sets the specified node as the current node.
+     * 
+     * @param node the new current node
+     * @return the current node
+     */
+    public ArgNode setCurrent (ArgNode node) {
+        return curr = node;
+    }
+    
     /**
      * Generates a new {@code ArgNode} and adds it to the east of
      * the current node. The new node becomes the current node.
@@ -123,25 +146,6 @@ public class ArgList {
     }
     
     /**
-     * Returns the current node.
-     * 
-     * @return the current node
-     */
-    public ArgNode getCurrent () {
-        return curr;
-    }
-    
-    /**
-     * Sets the specified node as the current node.
-     * 
-     * @param node the new current node
-     * @return the current node
-     */
-    public ArgNode setCurrent (ArgNode node) {
-        return curr = node;
-    }
-    
-    /**
      * Returns the node to the south of the current node.
      * If this node exists, it becomes the current node.
      * Otherwise, null is returned and the current node does not change.
@@ -149,9 +153,12 @@ public class ArgList {
      * @return the node to the south of the current node
      */
     public ArgNode  goSouth () {
-        ArgNode node = curr.getSouth();
+    	ArgNode node = curr;
         if (node != null) {
-            curr = node;
+            node = curr.getSouth();
+            if (node != null) {
+            	curr = node;
+            }
         }
         return node;
     }
@@ -164,9 +171,12 @@ public class ArgList {
      * @return the node to the east of the current node
      */
     public ArgNode goEast () {
-        ArgNode node = curr.getEast();
+        ArgNode node = curr;
         if (node != null) {
-            curr = node;
+            node = curr.getEast();
+            if (node != null) {
+            	curr = node;
+            }
         }
         return node;
     }
@@ -198,7 +208,9 @@ public class ArgList {
      * @param optional {@code true} to set the current node as optional
      */
     public void setOptional (boolean optional) {
-        curr.setOptional(optional);
+    	if (curr != null) {
+    		curr.setOptional(optional);
+    	}
     }
     
     /**
@@ -207,7 +219,9 @@ public class ArgList {
      * @param repeat {@code true} to set the current node as repeating
      */
     public void setRepeat (boolean repeat) {
-        curr.setRepeat(repeat);
+    	if (curr != null) {
+    		curr.setRepeat(repeat);
+    	}
     }
 
     /**

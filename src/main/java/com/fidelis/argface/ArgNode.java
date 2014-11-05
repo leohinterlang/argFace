@@ -35,7 +35,6 @@ public class ArgNode {
     
     /**
      * Creates a new empty {@code ArgNode}.
-     * 
      */
     public ArgNode () {
     }

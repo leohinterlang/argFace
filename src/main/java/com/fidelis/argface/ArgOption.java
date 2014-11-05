@@ -79,23 +79,15 @@ public class ArgOption implements Comparable<ArgOption> {
     public ArgOption(String name) {
         this.name = name;
     }
-    
 
     /**
      * @return the option text
      */
     public String getText () {
-        String text = "-";
-        if (name.length() > 1) {
-            text = "--";
-        }
+        String text = name.length() > 1 ? "--" : "-";
         text += name;
         if (altName != null) {
-            if (altName.length() > 1) {
-                text += ", --" + altName;
-            } else {
-                text += ", -" + altName;
-            }
+            text += ", " + (altName.length() > 1 ? "--" : "-") + altName;
         }
         return text;
     }
