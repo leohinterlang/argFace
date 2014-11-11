@@ -227,6 +227,10 @@ public abstract class ArgBase implements ArgFace {
         }
         return null;
     }
+    
+    public void setNonOptionList (List<String> nonOptionList) {
+    	this.nonOptionList = nonOptionList;
+    }
 
     public String [] operandArray () {
         return nonOptionList.toArray(new String [0]);
@@ -319,6 +323,10 @@ public abstract class ArgBase implements ArgFace {
         help.outputHelp();
     }
 
+    public String getProgramName () {
+    	return programName;
+    }
+    
     /**
      * Sets the program name.
      * 
@@ -454,7 +462,9 @@ public abstract class ArgBase implements ArgFace {
     public void setSortOptions (boolean sortOptions) {
         this.sortOptions = sortOptions;
         if (sortOptions) {
-            Collections.sort(optionList);
+        	if (optionList != null) {
+        		Collections.sort(optionList);
+        	}
         }
     }
     
@@ -578,6 +588,10 @@ public abstract class ArgBase implements ArgFace {
     public List<ArgOperand> getVarList () {
         return varList;
     }
+    
+    public void setVarList (List<ArgOperand> varList) {
+    	this.varList = varList;
+    }
 
     /**
      * Returns the literals operand list.
@@ -587,6 +601,10 @@ public abstract class ArgBase implements ArgFace {
     public List<ArgOperand> getLitList () {
         return litList;
     }
+    
+    public void setLitList (List<ArgOperand> litList) {
+    	this.litList = litList;
+    }
 
     /**
      * Returns the option list.
@@ -595,6 +613,18 @@ public abstract class ArgBase implements ArgFace {
      */
     public List<ArgOption> getOptionList () {
         return optionList;
+    }
+    
+    public void setOptionList (List<ArgOption> optionList) {
+    	this.optionList = optionList;
+    }
+    
+    public ArgList getArgList () {
+    	return argList;
+    }
+    
+    public void setArgList (ArgList argList) {
+    	this.argList = argList;
     }
     
     /**
